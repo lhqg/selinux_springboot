@@ -1,0 +1,294 @@
+############################################################################
+#
+#	Springboot SELinux policymodule
+#
+#	https://github.com/hubertqc/selinux_springboot
+#
+#
+# Copyright (c) 2022 H. Quarantel-Colombani <hubert@quarantel.name>
+# Author: Hubert Quarantel-Colombani <hubert@quarantel.name>
+#
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+############################################################################
+
+policy_module(springboot, 0.1.0)
+
+########################################
+#
+#	Types and attributes declarations
+#
+########################################
+
+attribute	springboot_file_type;
+attribute	springboot_consumed_svc_type;
+
+systemd_domain_template(springboot)
+
+type		springboot_port_t;
+typeattribute	springboot_port_t	springboot_consumed_svc_type;
+corenet_port(springboot_port_t)
+
+type		springboot_conf_t;
+typeattribute	springboot_conf_t	springboot_file_type;
+files_config_file(springboot_conf_t)
+
+type		springboot_auth_t;
+typeattribute	springboot_auth_t	springboot_file_type;
+files_auth_file(springboot_auth_t)
+
+type		springboot_log_t;
+typeattribute	springboot_log_t	springboot_file_type;
+logging_log_file(springboot_log_t)
+
+type		springboot_var_t;
+typeattribute	springboot_var_t	springboot_file_type;
+files_type(springboot_var_t)
+
+type 		springboot_run_t;
+typeattribute	springboot_run_t	springboot_file_type;
+files_type(springboot_run_t)
+
+type		springboot_bin_t;
+typeattribute	springboot_bin_t	springboot_file_type;
+application_executable_file(springboot_bin_t)
+
+type		springboot_lib_t;
+typeattribute	springboot_lib_t	springboot_file_type;
+files_type(springboot_lib_t)
+
+type		springboot_tmp_t;
+typeattribute	springboot_tmp_t	springboot_file_type;
+files_tmp_file(springboot_tmp_t)
+
+type		springboot_unit_file_t;
+systemd_unit_file(springboot_unit_file_t);
+
+bool	allow_springboot_purge_logs		false;
+bool	allow_webadm_read_springboot_files	false;
+bool	allow_sysadm_write_springboot_files	false;
+
+gen_require(`
+	type	http_port_t;
+	type	node_t;
+
+	type	proc_t;
+	type	proc_net_t;
+	type	sysfs_t;
+	type	fs_t;
+	type	sysctl_net_t;
+
+	type	bin_t;
+	type	tmp_t;
+	type	shell_exec_t;
+	type	passwd_file_t;
+	type	cert_t;
+
+	type	user_tmp_t;
+	type	user_home_dir_t;
+
+	type	sysadm_t;
+	type	logadm_t;
+	type	webadm_t;
+
+	role	system_r;
+')
+
+########################################
+#
+#	Policy for springboot_t domain
+#
+########################################
+
+role	system_r	types	springboot_t;
+
+#
+## Allow generic usage of the host
+#
+
+corecmd_read_bin_files(springboot_t)
+corecmd_exec_all_executables(springboot_t)
+files_exec_usr_files(springboot_t)
+files_exec_etc_files(springboot_t)
+files_search_locks(springboot_t)
+files_read_var_files(springboot_t)
+files_read_var_symlinks(springboot_t)
+files_read_generic_spool(springboot_t)
+files_read_var_lib_files(springboot_t)
+files_getattr_lost_found_dirs(springboot_t)
+files_read_config_files(springboot_t)
+fs_read_noxattr_fs_files(springboot_t)
+fs_read_noxattr_fs_symlinks(springboot_t)
+fs_rw_cgroup_files(springboot_t)
+application_getattr_socket(springboot_t)
+
+dev_read_rand(springboot_t)
+
+logging_send_syslog_msg(springboot_t)
+logging_send_audit_msgs(springboot_t)
+
+#
+##	Permissions on self resources
+#
+
+allow	springboot_t	self:capability	{ chown	dac_override dac_read_search fowner fsetid kill };
+allow	springboot_t	self:process	{ signal_perms setsockcreate execmem execstack };
+allow	springboot_t	self:fifo_file	rw_fifo_file_perms;
+allow	springboot_t	self:file	{ getattr read };
+allow	springboot_t	self:sem	create_sem_perms;
+allow	springboot_t	self:shm	create_shm_perms;
+
+allow	springboot_t	self:tcp_socket			create_stream_socket_perms;
+allow	springboot_t	self:udp_socket			create_stream_socket_perms;
+allow	springboot_t	self:unix_dgram_socket		create_socket_perms;
+allow	springboot_t	self:unix_stream_socket		{ create_stream_socket_perms connectto };
+allow	springboot_t	self:netlink_selinux_socket	create_socket_perms;
+allow	springboot_t	self:netlink_route_socket	{ bind create getattr nlmsg_read };
+
+#
+##	Permission on other system resources
+#
+
+allow	springboot_t	sysctl_net_t:dir	search;
+allow	springboot_t	sysctl_net_t:file	{ getattr open read };
+
+allow	springboot_t	fs_t:filesystem		{ getattr };
+
+allow	springboot_t	sysfs_t:dir		{ getattr search open read };
+
+allow	springboot_t	proc_t:dir		list_dir_perms;
+allow	springboot_t	proc_t:file		{ read open getattr };
+
+allow	springboot_t	proc_net_t:file		{ read open getattr };
+
+allow	springboot_t	bin_t:file		exec_file_perms;
+
+allow	springboot_t	tmp_t:dir		{ rw_dir_perms create rmdir };
+allow	springboot_t	tmp_t:file		{ manage_file_perms execute };
+
+allow	springboot_t	user_tmp_t:dir		rw_dir_perms;
+allow	springboot_t	user_tmp_t:file		manage_file_perms;
+
+allow	springboot_t	user_home_dir_t:dir	{ list_dir_perms };
+
+allow	springboot_t	passwd_file_t:file	{ read	open	getattr };
+allow	springboot_t	shell_exec_t:file	{ getattr	open	read	execute};
+
+allow	springboot_t	cert_t:dir		list_dir_perms;
+allow	springboot_t	cert_t:file		read_file_perms;
+allow	springboot_t	cert_t:lnk_file		read_lnk_file_perms;
+
+#
+##	Permissions	on	Springboot	specific	resources
+#
+
+#	Allow	to	perform	network	operations
+allow	springboot_t	node_t:tcp_socket			{ node_bind };
+
+allow	springboot_t	http_port_t:tcp_socket			{ name_bind	name_connect };
+allow	springboot_t	springboot_port_t:tcp_socket		{ name_bind	name_connect };
+
+allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
+
+
+#	Permissions	on	Springboot	specific	files/dirs
+
+allow	springboot_t	springboot_file_type:dir	list_dir_perms;
+allow	springboot_t	springboot_file_type:file	read_file_perms;
+allow	springboot_t	springboot_file_type:lnk_file	read_lnk_file_perms;
+
+allow	springboot_t	springboot_bin_t:file		exec_file_perms;
+
+allow	springboot_t	springboot_exec_t:file		exec_file_perms;
+
+allow	springboot_t	springboot_var_t:dir		manage_dir_perms;
+allow	springboot_t	springboot_var_t:file		manage_file_perms;
+allow	springboot_t	springboot_var_t:lnk_file	manage_lnk_file_perms;
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_var_t,	{ dir notdevfile_class_set } )
+
+allow	springboot_t	springboot_run_t:dir		manage_dir_perms;
+allow	springboot_t	springboot_run_t:file		manage_file_perms;
+allow	springboot_t	springboot_run_t:lnk_file	manage_lnk_file_perms;
+allow	springboot_t	springboot_run_t:sock_file	{ create_sock_file_perms rw_sock_file_perms };
+allow	springboot_t	springboot_run_t:fifo_file	{ create_fifo_file_perms rw_fifo_file_perms };
+
+filetrans_add_pattern(springboot_t,	springboot_run_t,	springboot_run_t,	{ dir notdevfile_class_set } )
+
+allow	springboot_t	springboot_tmp_t:dir		manage_dir_perms;
+allow	springboot_t	springboot_tmp_t:file		manage_file_perms;
+allow	springboot_t	springboot_tmp_t:lnk_file	manage_lnk_file_perms;
+filetrans_add_pattern(springboot_t,	springboot_tmp_t,	springboot_tmp_t,	{ dir notdevfile_class_set } )
+
+allow	springboot_t	springboot_log_t:dir		add_entry_dir_perms;
+allow	springboot_t	springboot_log_t:file		{ create_file_perms append_file_perms read_file_perms };
+logging_log_filetrans(springboot_t,	springboot_log_t,	{ file	dir }	)
+
+if	(allow_springboot_purge_logs)	{
+	allow	springboot_t	springboot_log_t:dir	rw_dir_perms;
+	allow	springboot_t	springboot_log_t:file	{ rename_file_perms delete_file_perms };
+}
+
+#
+##	Permissions for Sys admins (sysadm_t)
+#
+
+allow	sysadm_t	springboot_file_type:dir	list_dir_perms;
+allow	sysadm_t	springboot_file_type:file	getattr_file_perms;
+allow	sysadm_t	springboot_file_type:lnk_file	read_lnk_file_perms;
+
+allow	sysadm_t	springboot_bin_t:file		exec_file_perms;
+
+allow	sysadm_t	springboot_conf_t:file		read_file_perms;
+allow	sysadm_t	springboot_var_t:file		read_file_perms;
+allow	sysadm_t	springboot_run_t:file		read_file_perms;
+allow	sysadm_t	springboot_tmp_t:file		read_file_perms;
+allow	sysadm_t	springboot_lib_t:file		read_file_perms;
+allow	sysadm_t	springboot_log_t:file		read_file_perms;
+allow	sysadm_t	springboot_exec_t:file		read_file_perms;
+
+
+allow	sysadm_t	springboot_unit_file_t:file	read_file_perms;
+allow	sysadm_t	springboot_unit_file_t:service	manage_service_perms;
+
+if	(allow_sysadm_write_springboot_files)	{
+	allow	sysadm_t	springboot_tmp_t:dir	rw_dir_perms;
+	allow	sysadm_t	springboot_log_t:dir	del_entry_dir_perms;
+	allow	sysadm_t	springboot_conf_t:dir	del_entry_dir_perms;
+	allow	sysadm_t	springboot_run_t:dir	del_entry_dir_perms;
+
+	allow	sysadm_t	springboot_run_t:file	{ delete_file_perms	rename_file_perms };
+	allow	sysadm_t	springboot_tmp_t:file	manage_file_perms;
+	allow	sysadm_t	springboot_log_t:file	{ delete_file_perms	rename_file_perms };
+	allow	sysadm_t	springboot_conf_t:file	write_file_perms;
+}
+
+#
+##	Permissions for Web admins (webadm_t)
+#
+
+allow	webadm_t	springboot_file_type:dir	list_dir_perms;
+allow	webadm_t	springboot_file_type:file	getattr_file_perms;
+allow	webadm_t	springboot_file_type:lnk_file	read_lnk_file_perms;
+
+allow	webadm_t	springboot_unit_file_t:file	read_file_perms;
+allow	webadm_t	springboot_unit_file_t:service	{ stop	start	status };
+
+if	(allow_webadm_read_springboot_files)	{
+	allow	webadm_t	springboot_conf_t:file	read_file_perms;
+	allow	webadm_t	springboot_log_t:file	read_file_perms;
+	allow	webadm_t	springboot_run_t:file	read_file_perms;
+	allow	webadm_t	springboot_tmp_t:file	read_file_perms;
+}
+
