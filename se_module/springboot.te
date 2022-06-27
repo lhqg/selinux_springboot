@@ -114,6 +114,8 @@ gen_require(`
 
 role	system_r	types	springboot_t;
 
+mcs_constrained(springboot_t)
+
 #
 ## Allow generic usage of the host
 #
