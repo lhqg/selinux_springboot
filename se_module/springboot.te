@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.1.0)
+policy_module(springboot, 0.3.0)
 
 ########################################
 #
@@ -34,12 +34,18 @@ policy_module(springboot, 0.1.0)
 
 attribute	springboot_file_type;
 attribute	springboot_consumed_svc_type;
+attribute	springboot_monitoring_port_type;
 
 systemd_domain_template(springboot)
 
 type		springboot_port_t;
 typeattribute	springboot_port_t	springboot_consumed_svc_type;
 corenet_port(springboot_port_t)
+
+type		springboot_monitoring_port_t;
+typeattribute	springboot_monitoring_port_t	springboot_monitoring_port_type;
+corenet_port(springboot_monitoring_port_t)
+
 
 type		springboot_conf_t;
 typeattribute	springboot_conf_t	springboot_file_type;
@@ -104,6 +110,8 @@ gen_require(`
 	type	webadm_t;
 
 	role	system_r;
+	
+	attribute	domain;
 ')
 
 ########################################
@@ -181,7 +189,7 @@ allow	springboot_t	tmp_t:dir		{ rw_dir_perms create rmdir };
 allow	springboot_t	tmp_t:file		{ manage_file_perms execute };
 
 allow	springboot_t	user_tmp_t:dir		rw_dir_perms;
-allow	springboot_t	user_tmp_t:file		manage_file_perms;
+allow	springboot_t	user_tmp_t:file		manage_file_perms map;
 
 allow	springboot_t	user_home_dir_t:dir	{ list_dir_perms };
 
@@ -202,8 +210,11 @@ allow	springboot_t	node_t:tcp_socket			{ node_bind };
 allow	springboot_t	http_port_t:tcp_socket			{ name_bind	name_connect };
 allow	springboot_t	springboot_port_t:tcp_socket		{ name_bind	name_connect };
 
+#	Allow to consume authorized network services
 allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
 
+#	Allow to listen on ports to be monitored by authorized domains
+allow	springboot_t	springboot_monitoring_port_type:tcp_socket	name_bind;
 
 #	Permissions	on	Springboot	specific	files/dirs
 
@@ -212,6 +223,7 @@ allow	springboot_t	springboot_file_type:file	read_file_perms;
 allow	springboot_t	springboot_file_type:lnk_file	read_lnk_file_perms;
 
 allow	springboot_t	springboot_bin_t:file		exec_file_perms;
+allow	springboot_t	springboot_lib_t:file		map;
 
 allow	springboot_t	springboot_exec_t:file		exec_file_perms;
 
@@ -229,9 +241,10 @@ allow	springboot_t	springboot_run_t:fifo_file	{ create_fifo_file_perms rw_fifo_f
 filetrans_add_pattern(springboot_t,	springboot_run_t,	springboot_run_t,	{ dir notdevfile_class_set } )
 
 allow	springboot_t	springboot_tmp_t:dir		manage_dir_perms;
-allow	springboot_t	springboot_tmp_t:file		manage_file_perms;
+allow	springboot_t	springboot_tmp_t:file		{ manage_file_perms map };
 allow	springboot_t	springboot_tmp_t:lnk_file	manage_lnk_file_perms;
 filetrans_add_pattern(springboot_t,	springboot_tmp_t,	springboot_tmp_t,	{ dir notdevfile_class_set } )
+filetrans_add_pattern(springboot_t,	tmp_t,			springboot_tmp_t,	dir,				"hsperfdata_springboot" )
 
 allow	springboot_t	springboot_log_t:dir		add_entry_dir_perms;
 allow	springboot_t	springboot_log_t:file		{ create_file_perms append_file_perms read_file_perms };
@@ -241,6 +254,9 @@ if	(allow_springboot_purge_logs)	{
 	allow	springboot_t	springboot_log_t:dir	rw_dir_perms;
 	allow	springboot_t	springboot_log_t:file	{ rename_file_perms delete_file_perms };
 }
+
+dontaudit	springboot_t	domain:dir	getattr;
+dontaudit	springboot_t	domain:file	getattr;
 
 #
 ##	Permissions for Sys admins (sysadm_t)

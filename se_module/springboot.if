@@ -1,0 +1,46 @@
+############################################################################
+#
+#	Springboot SELinux policymodule
+#
+#	https://github.com/hubertqc/selinux_springboot
+#
+#
+# Copyright (c) 2022 H. Quarantel-Colombani <hubert@quarantel.name>
+# Author: Hubert Quarantel-Colombani <hubert@quarantel.name>
+#
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+############################################################################
+
+########################################
+## <summary>
+##      Authorize to connect to Springboot moniroting port
+## </summary>
+## <param name="domain">
+##      <summary>
+##      The domain prefix to be authorized to connect (TCP).
+##      </summary>
+## </param>
+#
+interface(`springboot_monitor',`
+	gen_require(`
+		type		$1_t;
+		attribute	springboot_monitoring_port_type;
+	')
+	
+	allow	$1_t	springboot_monitoring_port_type:tcp_socket	name_connect;
+
+')
+
