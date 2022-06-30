@@ -30,16 +30,17 @@
 ## </summary>
 ## <param name="domain">
 ##      <summary>
-##      The domain to be authorized to connect (TCP).
+##      The domain prefix to be authorized to connect (TCP).
 ##      </summary>
 ## </param>
 #
 interface(`springboot_monitor',`
-	gen_require(`gen_require(`
-  	type	$1;
+	gen_require(`
+		type		$1_t;
 		attribute	springboot_monitoring_port_type;
-  ')
+	')
 	
-	allow	$1	springboot_monitoring_port_type:tcp_socket	name_connect;
-	
+	allow	$1_t	springboot_monitoring_port_type:tcp_socket	name_connect;
+
 ')
+
