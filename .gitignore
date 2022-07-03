@@ -1,0 +1,17 @@
+.rspec
+.*.sw[op]
+.bundle/
+ext/packaging
+pkg
+Gemfile.lock
+Gemfile.local
+/.project
+.idea/
+*.iml
+.ruby-version
+.ruby-gemset
+.project
+.settings/
+**/*.rakeTasks
+.DS_Store
+.history

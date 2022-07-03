@@ -1,0 +1,21 @@
+#
+#
+#
+/(lib|etc)/systemd/system/springboot@.*				gen_context(system_u:object_r:springboot_unit_file_t,s0)
+#
+/var/log/springboot(/.*)?					gen_context(system_u:object_r:springboot_log_t,s0)
+/var/run/springboot(/.*)?					gen_context(system_u:object_r:springboot_run_t,s0)
+/var/tmp/springboot(/.*)?					gen_context(system_u:object_r:springboot_tmp_t,s0)
+/var/lib/springboot(/.*)?					gen_context(system_u:object_r:springboot_var_t,s0)
+/srv/springboot(/.*)?						gen_context(system_u:object_r:springboot_var_t,s0)
+#
+/opt/springboot/bin/springboot_service			--	gen_context(system_u:object_r:springboot_exec_t,s0)
+/opt/springboot/.*\.(so|jar)([\.p-][0-9]+)*		--	gen_context(system_u:object_r:springboot_lib_t,s0)
+/opt/springboot/.*\.(jks|jceks|p12|pkcs12)		--	gen_context(system_u:object_r:springboot_auth_t,s0)
+/opt/springboot/.*\.(conf|properties)			--	gen_context(system_u:object_r:springboot_conf_t,s0)
+/opt/springboot/[^/]+/env				--	gen_context(system_u:object_r:springboot_conf_t,s0)
+/opt/springboot/[^/]+/(conf|properties)(/.*)?			gen_context(system_u:object_r:springboot_conf_t,s0)
+/opt/springboot/[^/]+/keys(/.*)?				gen_context(system_u:object_r:springboot_auth_t,s0)
+/opt/springboot/[^/]+/(lib|app)(/.*)?				gen_context(system_u:object_r:springboot_lib_t,s0)
+/opt/springboot/[^/]+/bin(/.*)?					gen_context(system_u:object_r:springboot_bin_t,s0)
+/opt/springboot/[^/]+/run(/.*)?					gen_context(system_u:object_r:springboot_run_t,s0)

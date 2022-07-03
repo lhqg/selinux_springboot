@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.3.0)
+policy_module(springboot, 0.4.0)
 
 ########################################
 #
@@ -189,7 +189,7 @@ allow	springboot_t	tmp_t:dir		{ rw_dir_perms create rmdir };
 allow	springboot_t	tmp_t:file		{ manage_file_perms execute };
 
 allow	springboot_t	user_tmp_t:dir		rw_dir_perms;
-allow	springboot_t	user_tmp_t:file		manage_file_perms map;
+allow	springboot_t	user_tmp_t:file		{ manage_file_perms map };
 
 allow	springboot_t	user_home_dir_t:dir	{ list_dir_perms };
 
