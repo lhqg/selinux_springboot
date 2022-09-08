@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.4.0)
+policy_module(springboot, 0.5.0)
 
 ########################################
 #
@@ -247,12 +247,12 @@ filetrans_add_pattern(springboot_t,	springboot_tmp_t,	springboot_tmp_t,	{ dir no
 filetrans_add_pattern(springboot_t,	tmp_t,			springboot_tmp_t,	dir,				"hsperfdata_springboot" )
 
 allow	springboot_t	springboot_log_t:dir		add_entry_dir_perms;
-allow	springboot_t	springboot_log_t:file		{ create_file_perms append_file_perms read_file_perms };
+allow	springboot_t	springboot_log_t:file		{ create_file_perms append_file_perms read_file_perms rename_file_perms };
 logging_log_filetrans(springboot_t,	springboot_log_t,	{ file	dir }	)
 
 if	(allow_springboot_purge_logs)	{
 	allow	springboot_t	springboot_log_t:dir	rw_dir_perms;
-	allow	springboot_t	springboot_log_t:file	{ rename_file_perms delete_file_perms };
+	allow	springboot_t	springboot_log_t:file	delete_file_perms;
 }
 
 dontaudit	springboot_t	domain:dir	getattr;
