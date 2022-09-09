@@ -1,0 +1,35 @@
+#
+# SELinux code validation workflow
+#
+name: "Validate SELinux code"
+
+on:
+  push:
+    paths:
+      - '**.te'
+      - '**.fc'
+      - '**.if'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**.te'
+      - '**.fc'
+      - '**.if'
+
+jobs:
+  build:
+    name: Validate SELinux code
+
+    runs-on: self-hosted
+
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Compile
+        run: |
+          cd se_module/ && make -f /usr/share/selinux/devel/Makefile springboot.pp
+
