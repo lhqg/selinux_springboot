@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.5.0)
+policy_module(springboot, 0.6.0)
 
 ########################################
 #
@@ -75,6 +75,11 @@ type		springboot_lib_t;
 typeattribute	springboot_lib_t	springboot_file_type;
 files_type(springboot_lib_t)
 
+type		springboot_dynlib_t;
+typeattribute	springboot_dynlib_t	springboot_file_type;
+files_type(springboot_dynlib_t)
+
+
 type		springboot_tmp_t;
 typeattribute	springboot_tmp_t	springboot_file_type;
 files_tmp_file(springboot_tmp_t)
@@ -82,6 +87,7 @@ files_tmp_file(springboot_tmp_t)
 type		springboot_unit_file_t;
 systemd_unit_file(springboot_unit_file_t);
 
+bool	allow_springboot_dynamic_libs	false;
 bool	allow_springboot_purge_logs		false;
 bool	allow_webadm_read_springboot_files	false;
 bool	allow_sysadm_write_springboot_files	false;
@@ -222,15 +228,31 @@ allow	springboot_t	springboot_file_type:dir	list_dir_perms;
 allow	springboot_t	springboot_file_type:file	read_file_perms;
 allow	springboot_t	springboot_file_type:lnk_file	read_lnk_file_perms;
 
-allow	springboot_t	springboot_bin_t:file		exec_file_perms;
-allow	springboot_t	springboot_lib_t:file		map;
+allow	springboot_t	springboot_bin_t:file			exec_file_perms;
+allow	springboot_t	springboot_lib_t:file			map;
+allow	springboot_t	springboot_dynlib_t:file		exec_file_perms;
+
+if	(allow_springboot_dynamic_libs)	{
+	allow	springboot_t	springboot_dynlib_t:dir		{ create_dir_perms rw_dir_perms };
+	allow	springboot_t	springboot_dynlib_t:file	manage_file_perms;
+	allow	springboot_t	springboot_dynlib_t:lnk_file	manage_lnk_file_perms;
+	filetrans_add_pattern(springboot_t,	springboot_dynlib_t,	springboot_dynlib_t,	{ dir file lnk_file } )
+}
 
 allow	springboot_t	springboot_exec_t:file		exec_file_perms;
 
 allow	springboot_t	springboot_var_t:dir		manage_dir_perms;
 allow	springboot_t	springboot_var_t:file		manage_file_perms;
 allow	springboot_t	springboot_var_t:lnk_file	manage_lnk_file_perms;
+
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_tmp_t,	dir, "tmp" )
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_tmp_t,	dir, "temp" )
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_run_t,	dir, "run" )
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_run_t,	dir, "cache" )
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_run_t,	dir, "work" )
+filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_dynlib_t,	dir, "lib" )
 filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_var_t,	{ dir notdevfile_class_set } )
+
 
 allow	springboot_t	springboot_run_t:dir		manage_dir_perms;
 allow	springboot_t	springboot_run_t:file		manage_file_perms;
@@ -262,9 +284,9 @@ dontaudit	springboot_t	domain:file	getattr;
 ##	Permissions for Sys admins (sysadm_t)
 #
 
-allow	sysadm_t	springboot_file_type:dir	list_dir_perms;
-allow	sysadm_t	springboot_file_type:file	getattr_file_perms;
-allow	sysadm_t	springboot_file_type:lnk_file	read_lnk_file_perms;
+allow	sysadm_t	springboot_file_type:dir			list_dir_perms;
+allow	sysadm_t	springboot_file_type:notdevfile_class_set	getattr;
+allow	sysadm_t	springboot_file_type:lnk_file			read_lnk_file_perms;
 
 allow	sysadm_t	springboot_bin_t:file		exec_file_perms;
 
@@ -273,6 +295,7 @@ allow	sysadm_t	springboot_var_t:file		read_file_perms;
 allow	sysadm_t	springboot_run_t:file		read_file_perms;
 allow	sysadm_t	springboot_tmp_t:file		read_file_perms;
 allow	sysadm_t	springboot_lib_t:file		read_file_perms;
+allow	sysadm_t	springboot_dynlib_t:file	read_file_perms;
 allow	sysadm_t	springboot_log_t:file		read_file_perms;
 allow	sysadm_t	springboot_exec_t:file		read_file_perms;
 
@@ -296,9 +319,9 @@ if	(allow_sysadm_write_springboot_files)	{
 ##	Permissions for Web admins (webadm_t)
 #
 
-allow	webadm_t	springboot_file_type:dir	list_dir_perms;
-allow	webadm_t	springboot_file_type:file	getattr_file_perms;
-allow	webadm_t	springboot_file_type:lnk_file	read_lnk_file_perms;
+allow	webadm_t	springboot_file_type:dir			list_dir_perms;
+allow	webadm_t	springboot_file_type:notdevfile_class_set	getattr;
+allow	webadm_t	springboot_file_type:lnk_file			read_lnk_file_perms;
 
 allow	webadm_t	springboot_unit_file_t:file	read_file_perms;
 allow	webadm_t	springboot_unit_file_t:service	{ stop	start	status };

@@ -32,7 +32,12 @@
 /var/run/springboot(/.*)?							gen_context(system_u:object_r:springboot_run_t,s0)
 /var/tmp/springboot(/.*)?							gen_context(system_u:object_r:springboot_tmp_t,s0)
 /var/lib/springboot(/.*)?							gen_context(system_u:object_r:springboot_var_t,s0)
+#
 /srv/springboot(/.*)?								gen_context(system_u:object_r:springboot_var_t,s0)
+/srv/springboot/(.*/)?te?mp(/.*)?						gen_context(system_u:object_r:springboot_tmp_t,s0)
+/srv/springboot/(.*/)?(cache|run|work)(/.*)?					gen_context(system_u:object_r:springboot_run_t,s0)
+/srv/springboot/(.*/)?(d?lib|app)(/.*)?						gen_context(system_u:object_r:springboot_dynlib_t,s0)
+/srv/springboot/(.*/)?.*\.(so|jar)([\.p-][0-9]+)*			--	gen_context(system_u:object_r:springboot_dynlib_t,s0)
 #
 /opt/springboot/bin/springboot_service					--	gen_context(system_u:object_r:springboot_exec_t,s0)
 /opt/springboot/service/.*						--	gen_context(system_u:object_r:springboot_exec_t,s0)
