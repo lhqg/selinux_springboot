@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.6.0)
+policy_module(springboot, 0.6.1)
 
 ########################################
 #
@@ -237,11 +237,11 @@ if	(allow_springboot_dynamic_libs)	{
 	allow	springboot_t	springboot_dynlib_t:file	exec_file_perms;
 	allow	springboot_t	springboot_dynlib_t:lnk_file	manage_lnk_file_perms;
 
-	filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_dynlib_t,	dir, "lib" )
-	filetrans_add_pattern(springboot_t,	springboot_run_t,	springboot_dynlib_t,	dir, "lib" )
-	filetrans_add_pattern(springboot_t,	springboot_tmp_t,	springboot_dynlib_t,	dir, "lib" )
 	filetrans_add_pattern(springboot_t,	springboot_dynlib_t,	springboot_dynlib_t,	{ dir file lnk_file } )
 }
+type_transition	springboot_t	springboot_var_t:dir	springboot_dynlib_t	"lib" ;
+type_transition	springboot_t	springboot_run_t:dir	springboot_dynlib_t	"lib" ;
+type_transition	springboot_t	springboot_tmp_t:dir	springboot_dynlib_t	"lib" ;
 
 allow	springboot_t	springboot_exec_t:file		exec_file_perms;
 
