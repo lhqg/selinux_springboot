@@ -87,7 +87,7 @@ files_tmp_file(springboot_tmp_t)
 type		springboot_unit_file_t;
 systemd_unit_file(springboot_unit_file_t);
 
-bool	allow_springboot_dynamic_libs	false;
+bool	allow_springboot_dynamic_libs		false;
 bool	allow_springboot_purge_logs		false;
 bool	allow_webadm_read_springboot_files	false;
 bool	allow_sysadm_write_springboot_files	false;
@@ -230,12 +230,16 @@ allow	springboot_t	springboot_file_type:lnk_file	read_lnk_file_perms;
 
 allow	springboot_t	springboot_bin_t:file			exec_file_perms;
 allow	springboot_t	springboot_lib_t:file			map;
-allow	springboot_t	springboot_dynlib_t:file		exec_file_perms;
 
 if	(allow_springboot_dynamic_libs)	{
 	allow	springboot_t	springboot_dynlib_t:dir		{ create_dir_perms rw_dir_perms };
 	allow	springboot_t	springboot_dynlib_t:file	manage_file_perms;
+	allow	springboot_t	springboot_dynlib_t:file	exec_file_perms;
 	allow	springboot_t	springboot_dynlib_t:lnk_file	manage_lnk_file_perms;
+
+	filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_dynlib_t,	dir, "lib" )
+	filetrans_add_pattern(springboot_t,	springboot_run_t,	springboot_dynlib_t,	dir, "lib" )
+	filetrans_add_pattern(springboot_t,	springboot_tmp_t,	springboot_dynlib_t,	dir, "lib" )
 	filetrans_add_pattern(springboot_t,	springboot_dynlib_t,	springboot_dynlib_t,	{ dir file lnk_file } )
 }
 
@@ -250,7 +254,6 @@ filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_tmp_t,	dir, "te
 filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_run_t,	dir, "run" )
 filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_run_t,	dir, "cache" )
 filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_run_t,	dir, "work" )
-filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_dynlib_t,	dir, "lib" )
 filetrans_add_pattern(springboot_t,	springboot_var_t,	springboot_var_t,	{ dir notdevfile_class_set } )
 
 
