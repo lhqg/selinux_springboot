@@ -1,0 +1,30 @@
+#
+# SELinux code validation workflow
+#
+name: "Validate SELinux code"
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: self-hosted
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: true
+
+    steps:
+      uses: actions/checkout@v3
+
+      - name: Compile
+        run: |
+          cd se_module/ && make -f /usr/share/selinux/devel/Makefile springboot.pp
+
