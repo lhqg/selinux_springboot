@@ -153,7 +153,7 @@ TO DO
 ## Disclaimer
 
 The code of the this SELinux policy module is provided AS-IS. People and organisation
-willing to use it must be fulling aware that they are doing it at their own risks and
+willing to use it must be fully aware that they are doing so at their own risks and
 expenses.
 
 The Author(s) of this SELinux policy module SHALL NOT be held liable nor accountable, in
