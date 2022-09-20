@@ -65,10 +65,35 @@ Should you prefer to used a different directory structure, you should consider u
 SELinux fcontext equivalence rules to map your specifics to the filesystem layout expected
 in the policy module, using the `semanage fcontext -a -e ORIGINAL CUSTOMISATION` command.
 
-### Network ports
+### Networking
 
+#### Listen port
 The TCP port the Springboot application binds and listens too should be assigned the
  `springboot_port_t`SELinux type.
+ 
+#### Monitoring port
+If the Springboot application needs to bind and listen to a specific port to offer
+monitoring metrics and information, then this TCP port should be assigned the
+`springboot_monitoring_port_t` SELinux type.
+
+
+Then, (host)local processes need to be granted the permission to connect to the monitoring
+port using the policy module interface `springboot_monitor()` with the SELinux domain
+prefix as the only argument.
+
+Example: `springboot_monitoring_port_t(zabbix)` to Allow Zabbix to connect to the
+monitoring port of the Springboot application.
+
+#### Services consumed by the Springboot application
+If the application needs to connect to services such as databases, directory servers, ...
+the SELinux type of these services network port must be allowed for the Springboot
+application to connect to.
+One of the `springboot_allow_connectto` or `springboot_allow_consumed_service` interfaces
+should be used with the prefix name for the service as the only argument.
+
+Examples:
+- `springboot_allow_connectto(postgresql)` to allow the Springboot application to connect to a PostgreSQL database
+- `springboot_allow_connectto(ldap)` to allow connection to LDAP directory services.
 
 ### SELinux booleans
 
@@ -89,7 +114,7 @@ permissions to browse the directories of the Springboot application and the perm
 stop and start the Springboot application **systemd** services, as well as querying their
 status.
 
-When switched to `true`, this boolean allows duch users additional permissions to read the 
+When switched to `true`, this boolean allows such users additional permissions to read the 
 contents of Springboot application files: log, configuration, temp and transient/cache
 files.
 
@@ -116,8 +141,8 @@ Directories to tune or override unit behaviour are supported.
 Template/instantiated units are supported provided the master file is named
 `springboot@.service`.
 
-The script(s) used to start or stop the Springboot MUST be located in the 
-/opt/springboot/service/ directory. The /opt/springboot/bin/springboot_service filen ame
+The script(s) used to start or stop the Springboot application MUST be located in the 
+/opt/springboot/service/ directory. The /opt/springboot/bin/springboot_service file name
 is also supported.
 
 ### Running multiple Springboot appplications on the same host
@@ -128,7 +153,7 @@ TO DO
 ## Disclaimer
 
 The code of the this SELinux policy module is provided AS-IS. People and organisation
-willing to use it must be fulling aware that they are doing it at their own risks and
+willing to use it must be fully aware that they are doing so at their own risks and
 expenses.
 
 The Author(s) of this SELinux policy module SHALL NOT be held liable nor accountable, in
