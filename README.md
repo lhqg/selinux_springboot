@@ -114,7 +114,7 @@ permissions to browse the directories of the Springboot application and the perm
 stop and start the Springboot application **systemd** services, as well as querying their
 status.
 
-When switched to `true`, this boolean allows duch users additional permissions to read the 
+When switched to `true`, this boolean allows such users additional permissions to read the 
 contents of Springboot application files: log, configuration, temp and transient/cache
 files.
 
@@ -141,8 +141,8 @@ Directories to tune or override unit behaviour are supported.
 Template/instantiated units are supported provided the master file is named
 `springboot@.service`.
 
-The script(s) used to start or stop the Springboot MUST be located in the 
-/opt/springboot/service/ directory. The /opt/springboot/bin/springboot_service filen ame
+The script(s) used to start or stop the Springboot application MUST be located in the 
+/opt/springboot/service/ directory. The /opt/springboot/bin/springboot_service file name
 is also supported.
 
 ### Running multiple Springboot appplications on the same host
