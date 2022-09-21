@@ -20,7 +20,7 @@ jobs:
   build:
     name: Validate SELinux code
 
-    runs-on: self-hosted
+    runs-on: [self-hosted, CentOS-8]
 
     permissions:
       actions: read
@@ -31,5 +31,5 @@ jobs:
 
       - name: Compile
         run: |
-          cd se_module/ && make -f /usr/share/selinux/devel/Makefile springboot.pp
+          cd se_module/ && make -f /usr/share/selinux/devel/Makefile
 
