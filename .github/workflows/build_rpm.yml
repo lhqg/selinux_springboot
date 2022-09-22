@@ -1,0 +1,104 @@
+#
+# SELinux policy module RPM build
+#
+name: "Build RPM to install SELinux policy module"
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      # Push events to matching v*, i.e. v1.0, v20.15.10
+  
+jobs:
+  build:
+    name: Create RPM Release
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}-rpmbuild
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - Create RPM
+            - Upload RPM
+            - Upload check sums (SHA256 and SHAR512)
+          draft: false
+          prerelease: false
+
+      - name: Prepare RPM spec file
+        run: |
+            version=$( echo "${{ github.ref }}" | sed -E 's,^.*/v?([0-9]+\.[0-9]+\.[0-9]+).*$,\1,' )       
+            if [ -n "${version}" ]
+            then
+                sed -i -E "s,#\{version\}#,${version}," rpm/selinux_springboot.spec
+            fi
+            
+      - name: build RPM package
+        id: rpm_build
+        uses: naveenrajm7/rpmbuild@master
+        with:
+          spec_file: "rpm/selinux_springboot.spec"
+
+      - name: Get binary RPM package characteritics
+        id: get_binrpm_chars
+        run: |
+          rpm_arch=$( awk '/^BuildArch/ { print $NF }' rpm/selinux_springboot.spec )
+          rpm_name=$( awk '/^Name/      { print $NF }' rpm/selinux_springboot.spec )
+          rpm_vers=$( awk '/^Version/      { print $NF }' rpm/selinux_springboot.spec )
+          rpm_file_path=$( ls ${{ steps.rpm_build.outputs.rpm_dir_path }}/${rpm_arch}/${rpm_name}-${rpm_vers}*.${rpm_arch}.rpm )
+          rpm_file_name=$( basename ${rpm_file_path} )
+          rpm_file_256sum=$( sha256sum ${rpm_file_path} | cut -d " " -f 1 )
+          rpm_file_512sum=$( sha512sum ${rpm_file_path} | cut -d " " -f 1 )
+          echo "::set-output name=rpm_arch::${rpm_arch}"
+          echo "::set-output name=rpm_file_path::${rpm_file_path}"
+          echo "::set-output name=rpm_file_name::${rpm_file_name}"
+          echo "::set-output name=rpm_file_256sum::${rpm_file_256sum}"
+          echo "::set-output name=rpm_file_512sum::${rpm_file_512sum}"
+          
+          # create checksum files
+          echo "${rpm_file_256sum}" > ${rpm_file_name}.SHA256
+          echo "${rpm_file_512sum}" > ${rpm_file_name}.SHA512
+            
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ${{ steps.get_binrpm_chars.outputs.rpm_file_path }}
+          asset_name: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}
+          asset_content_type: ${{ steps.rpm_build.outputs.rpm_content_type }}
+
+      - name: Upload Release Asset SHA256
+        id: upload-release-asset_sha256 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA256
+          asset_name: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA256.txt
+          asset_content_type: text/plain
+
+      - name: Upload Release Asset SHA512
+        id: upload-release-asset_sha512 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA512
+          asset_name: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA512.txt
+          asset_content_type: text/plain

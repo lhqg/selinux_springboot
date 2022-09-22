@@ -10,7 +10,7 @@ on:
       - '**.fc'
       - '**.if'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "release/**" ]
     paths:
       - '**.te'
       - '**.fc'
@@ -19,17 +19,70 @@ on:
 jobs:
   build:
     name: Validate SELinux code
-
+    env:
+      SEMODULE: springboot
+      
     runs-on: [self-hosted, CentOS-8]
 
     permissions:
       actions: read
       contents: read
 
+    outputs:
+      semodule_name: ${{ steps.semodule_chars.outputs.semodule_name }}
+      semodule_vers: ${{ steps.semodule_chars.outputs.semodule_vers }}
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Compile
         run: |
-          cd se_module/ && make -f /usr/share/selinux/devel/Makefile
+          cd se_module/ && make -f /usr/share/selinux/devel/Makefile ${SEMODULE}.pp
 
+      - name: Get SELinux policy module characteristics
+        id: semodule_chars
+        run: |
+          awk '
+          /^[[:blank:]]*module[[:blank:]]+/ {
+            sub("[[:blank:]]*;$", "")
+            module_name=$2
+            module_vers=$3
+          }
+          /^[[:blank:]]*policy_module[[:blank:]]*\(/ {
+            sub("^[[:blank:]]*policy_module.[[:blank:]]*", "")
+            sub("[[:blank:]]*)$", "")
+            split($0, a, "[[:blank:]]*,[[:blank:]]*")
+            module_name=a[1]
+            module_vers=a[2]
+          }
+          END {
+            print "::set-output name=semodule_name::"module_name
+            print "::set-output name=semodule_vers::"module_vers
+          }' se_module/${SEMODULE}.te
+
+
+  add_tag:
+    name: Add SELinux module version tag on the branch
+
+    if: github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') )
+
+    needs: build
+    
+    env:
+      SEMODULE: springboot
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Tag the branch with the SELinux module version and draft a pre-release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.build.semodule_vers }}-candidate
+          release_name: Release v${{ needs.build.semodule_vers }} candidate
+          draft: true
+          prerelease: true
+      
