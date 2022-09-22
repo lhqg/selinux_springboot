@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.6.2)
+policy_module(springboot, 0.6.3)
 
 ########################################
 #
@@ -161,8 +161,12 @@ logging_send_audit_msgs(springboot_t)
 
 allow	springboot_t	self:capability	{ chown	dac_override dac_read_search fowner fsetid kill };
 allow	springboot_t	self:process	{ signal_perms setsockcreate execmem execstack };
-allow	springboot_t	self:fifo_file	rw_fifo_file_perms;
+
+allow	springboot_t	self:dir	list_dir_perms;
 allow	springboot_t	self:file	{ getattr read };
+allow	springboot_t	self:lnk_file	read_lnk_file_perms;
+allow	springboot_t	self:fifo_file	rw_fifo_file_perms;
+
 allow	springboot_t	self:sem	create_sem_perms;
 allow	springboot_t	self:shm	create_shm_perms;
 
@@ -224,9 +228,10 @@ allow	springboot_t	springboot_monitoring_port_type:tcp_socket	name_bind;
 
 #	Permissions	on	Springboot	specific	files/dirs
 
-allow	springboot_t	springboot_file_type:dir	list_dir_perms;
-allow	springboot_t	springboot_file_type:file	read_file_perms;
-allow	springboot_t	springboot_file_type:lnk_file	read_lnk_file_perms;
+allow	springboot_t	springboot_file_type:dir			list_dir_perms;
+allow	springboot_t	springboot_file_type:notdevfile_class_set	getattr;
+allow	springboot_t	springboot_file_type:file			read_file_perms;
+allow	springboot_t	springboot_file_type:lnk_file			read_lnk_file_perms;
 
 allow	springboot_t	springboot_bin_t:file			exec_file_perms;
 allow	springboot_t	springboot_lib_t:file			map;
