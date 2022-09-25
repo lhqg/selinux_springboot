@@ -1,3 +1,8 @@
+#
+# SELinux policy module RPM build
+#
+name: "Build RPM to install SELinux policy module"
+
 on:
     push:
        branches: [ "main" ]
