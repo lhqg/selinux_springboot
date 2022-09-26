@@ -14,7 +14,7 @@ on:
 jobs:
   build:
     name: Create RPM Release
-    runs-on: [self-hosted, CentOS-8]
+    runs-on: ubuntu-latest
 
     steps:
 
