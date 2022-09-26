@@ -26,9 +26,9 @@ The Springboot application will run in the springboot_t domain.
 %build
 
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/packages/targeted
-mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/contrib
+mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/apps
 
-install -m 0444 se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/contrib/springboot.if
+install -m 0444 se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/springboot.if
 cd se_module/ && tar cfvj %{buildroot}/usr/share/selinux/packages/targeted/springboot.pp.bz2 springboot.te springboot.fc
 
 %post
@@ -45,7 +45,7 @@ rm -rf /tmp/selinux-springboot
 semodule -r springboot
 
 %files
-/usr/share/selinux/devel/include/contrib/springboot.if
+/usr/share/selinux/devel/include/apps/springboot.if
 %verify(not size filedigest mtime) /usr/share/selinux/packages/targeted/springboot.pp.bz2
 
 %license LICENSE
