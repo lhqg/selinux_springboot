@@ -1,11 +1,11 @@
-Name:     springboot-selinux
-Version:  #{version}#
-Release:  1
-Summary:	SELinux policy module for Springboot applications
-License:	GPLv2
-URL: 		https://github.com/hubertqc/selinux_springboot
-Source0:	https://github.com/hubertqc/selinux_springboot/archive/refs/tags/v%{version}.tar.gz
-BuildArch:	noarch
+Name:      springboot-selinux
+Version:   #{version}#
+Release:   1
+Summary:	 SELinux policy module for Springboot applications
+License:	 GPLv2
+URL:       https://github.com/hubertqc/selinux_springboot
+Source:    %{name}-%{version}.tar.gz
+BuildArch: noarch
 
 BuildRequires:	selinux-policy-devel
 BuildRequires:	make
@@ -21,7 +21,7 @@ assigned the springboot_exec_t SELinux type.
 The Springboot application will run in the springboot_t domain.
 
 %prep
-%setup -q -n selinux_springboot-%{version}
+%setup -q
 
 %build
 
