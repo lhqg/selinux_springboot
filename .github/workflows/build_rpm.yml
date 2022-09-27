@@ -40,7 +40,7 @@ jobs:
             if [ -n "${version}" ]
             then
                 sed -i -E "s,#\{version\}#,${version}," rpm/selinux_springboot.spec
-                tar -cvz -f v${version}.tar.gz -C ../ --exclude='.github' --exclude='rpm' --transform="s,/,-${version}," selinux_springboot
+                tar -cvz -f v${version}.tar.gz -C ../ --exclude='.git*' --exclude='rpm' --transform="s,/,-${version}/," selinux_springboot
             fi
             
       - name: build RPM package
