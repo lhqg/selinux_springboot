@@ -7,12 +7,10 @@ URL:       https://github.com/hubertqc/selinux_springboot
 Source:    %{name}-%{version}.tar.gz
 BuildArch: noarch
 
-BuildRequires:	selinux-policy-devel
-BuildRequires:	make
-
 Requires:	selinux-policy-devel
 Requires:	selinux-policy-targeted
 Requires:	policycoreutils
+Requires:	make
 
 %description
 SELinux policy module to confine Springboot applications started using systemd.
