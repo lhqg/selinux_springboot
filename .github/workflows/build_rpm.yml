@@ -34,15 +34,13 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Replace Tokens in RPM spec file
+      - name: Prepare RPM spec file
         run: |
-            #latest_rlse_url="https://api.github.com/repos/hubertqc/selinux_springboot/releases/latest"
-            #latest_rlse_tag=$( curl -Ls ${latest_rlse_url} | awk '/tag_name/ { t=$NF; gsub("[\",]", "", t); print t }' )
-            
             version=$( echo "${{ github.ref }}" | sed -E 's,^.*/v?([0-9]+\.[0-9]+\.[0-9]+).*$,\1,' )       
             if [ -n "${version}" ]
             then
                 sed -i -E "s,#\{version\}#,${version}," rpm/selinux_springboot.spec
+                tar -cvz -f v${version}.tar.gz -C ../ --exclude='.github' --exclude='rpm' --transform="s,/,-${version}",' selinux_springboot
             fi
             
       - name: build RPM package
