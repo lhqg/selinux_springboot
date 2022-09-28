@@ -49,7 +49,7 @@ jobs:
             module_vers=$3
           }
           /^[[:blank:]]*policy_module[[:blank:]]*\(/ {
-            sub("^[[:blank:]]*policy_module.([[:blank:]]*", "")
+            sub("^[[:blank:]]*policy_module.[[:blank:]]*", "")
             sub("[[:blank:]]*)$", "")
             split($0, a, "[[:blank:]]*,[[:blank:]]*")
             module_name=a[1]
