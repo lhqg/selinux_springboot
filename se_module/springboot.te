@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.6.3)
+policy_module(springboot, 0.6.4)
 
 ########################################
 #
@@ -86,6 +86,9 @@ files_tmp_file(springboot_tmp_t)
 
 type		springboot_unit_file_t;
 systemd_unit_file(springboot_unit_file_t);
+
+bool	allow_springboot_http_connect		true;
+bool	allow_springboot_self_connect		false;
 
 bool	allow_springboot_dynamic_libs		false;
 bool	allow_springboot_purge_logs		false;
@@ -217,14 +220,23 @@ allow	springboot_t	cert_t:lnk_file		read_lnk_file_perms;
 #	Allow	to	perform	network	operations
 allow	springboot_t	node_t:tcp_socket			{ node_bind };
 
-allow	springboot_t	http_port_t:tcp_socket			{ name_bind	name_connect };
-allow	springboot_t	springboot_port_t:tcp_socket		{ name_bind	name_connect };
+allow	springboot_t	springboot_port_t:tcp_socket		name_bind;
+
+if (allow_springboot_http_connect) {
+	allow	springboot_t	http_port_t:tcp_socket		name_connect;
+}
+
+if (allow_springboot_self_connect) {
+	allow	springboot_t	springboot_port_t:tcp_socket	name_connect;
+}
 
 #	Allow to consume authorized network services
 allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
 
 #	Allow to listen on ports to be monitored by authorized domains
 allow	springboot_t	springboot_monitoring_port_type:tcp_socket	name_bind;
+
+
 
 #	Permissions	on	Springboot	specific	files/dirs
 
