@@ -81,8 +81,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.build.semodule_vers }}-candidate
-          release_name: Release v${{ needs.build.semodule_vers }} candidate
+          tag_name: v${{ needs.build.outputs.semodule_vers }}-candidate
+          release_name: Release v${{ needs.build.outputs.semodule_vers }} candidate
           draft: true
           prerelease: true
       
