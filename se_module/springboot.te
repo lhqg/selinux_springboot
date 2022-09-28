@@ -88,7 +88,7 @@ type		springboot_unit_file_t;
 systemd_unit_file(springboot_unit_file_t);
 
 bool	allow_springboot_http_connect		true;
-bool	allow_springboot_other_connect		false;
+bool	allow_springboot_self_connect		false;
 
 bool	allow_springboot_dynamic_libs		false;
 bool	allow_springboot_purge_logs		false;
@@ -226,7 +226,7 @@ if (allow_springboot_http_connect) {
 	allow	springboot_t	http_port_t:tcp_socket		name_connect;
 }
 
-if (allow_springboot_other_connect) {
+if (allow_springboot_self_connect) {
 	allow	springboot_t	springboot_port_t:tcp_socket	name_connect;
 }
 
