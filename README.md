@@ -101,9 +101,9 @@ Examples:
 When switch to `true`this boolean allows the Springboot application to connect to remote
 HTTP/HTTPS ports (locally assigned the `http_port_t` SELinux type).
 
-#### allow_springboot_other_connect      (default: `true`)
-When switch to `true`this boolean allows the Springboot application to connect to remote
-other Springboot application ports (locally assigned the `springboot_port_t` SELinux type).
+#### allow_springboot_self_connect      (default: `true`)
+When switch to `true`this boolean allows the Springboot application to connect to othe remote
+Springboot application (locally assigned the `springboot_port_t` SELinux type).
 
 #### allow_springboot_dynamic_libs		(default: `false`)
 When switched to `true`, this boolean allows the Springboot application to create and use
