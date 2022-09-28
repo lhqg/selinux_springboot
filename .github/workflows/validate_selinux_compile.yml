@@ -58,7 +58,7 @@ jobs:
           END {
             print "::set-output name=semodule_name::"module_name
             print "::set-output name=semodule_vers::"module_vers
-          }' ${SEMODULE}.te
+          }' se_module/${SEMODULE}.te
 
 
   add_tag:
