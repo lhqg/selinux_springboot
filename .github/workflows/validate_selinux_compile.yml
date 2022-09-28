@@ -10,7 +10,7 @@ on:
       - '**.fc'
       - '**.if'
   pull_request:
-    branches: [ "main", "release/*" ]
+    branches: [ "main", "release/**" ]
     paths:
       - '**.te'
       - '**.fc'
