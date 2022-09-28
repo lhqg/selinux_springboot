@@ -4,11 +4,14 @@
 name: "Validate SELinux code"
 
 on:
+  workflow_dispatch:
+  
   push:
     paths:
       - '**.te'
       - '**.fc'
       - '**.if'
+      
   pull_request:
     branches: [ "main", "release/**" ]
     paths:
@@ -49,8 +52,8 @@ jobs:
             module_vers=$3
           }
           /^[[:blank:]]*policy_module[[:blank:]]*\(/ {
-            sub("^[[:blank:]]*policy_module.[[:blank:]]*", "")
-            sub("[[:blank:]]*)$", "")
+            sub("^[[:blank:]]*policy_module[[:blank:]]*[(][[:blank:]]*", "")
+            sub("[[:blank:]]*)[[:blank:]]*$", "")
             split($0, a, "[[:blank:]]*,[[:blank:]]*")
             module_name=a[1]
             module_vers=a[2]
@@ -64,7 +67,7 @@ jobs:
   add_tag:
     name: Add SELinux module version tag on the branch
 
-    if: github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') )
+    if: ( github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') ) ) || github.event_name == 'workflow_dispatch'
 
     needs: build
     
@@ -81,8 +84,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.build.semodule_vers }}-candidate
-          release_name: Release v${{ needs.build.semodule_vers }} candidate
+          tag_name: v${{ needs.build.outputs.semodule_vers }}-candidate
+          release_name: Release v${{ needs.build.outputs.semodule_vers }} candidate
           draft: true
           prerelease: true
       
