@@ -4,11 +4,14 @@
 name: "Validate SELinux code"
 
 on:
+  workflow_dispatch:
+  
   push:
     paths:
       - '**.te'
       - '**.fc'
       - '**.if'
+      
   pull_request:
     branches: [ "main", "release/**" ]
     paths:
@@ -64,7 +67,7 @@ jobs:
   add_tag:
     name: Add SELinux module version tag on the branch
 
-    if: github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') )
+    if: ( github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') ) ) || github.event_name == 'workflow_dispatch'
 
     needs: build
     
