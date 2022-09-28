@@ -60,3 +60,30 @@ jobs:
             print "::set-output name=semodule_vers::"module_vers
           }' ${SEMODULE}.te
 
+
+  add_tag:
+    name: Add SELinux module version tag on the branch
+
+    if: ${{ github.event_name == "push" && ( github.ref_name == "main" || startsWith(github.ref_name, "release/" ) }}
+
+    needs: build
+    
+    env:
+      SEMODULE: springboot
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Tag the branch with the SELinux module version and draft a pre-release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.build.semodule_vers }}-candidate
+          release_name: Release v${{ needs.build.semodule_vers }} candidate
+          draft: true
+          prerelease: true
+      
+      
