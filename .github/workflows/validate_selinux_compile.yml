@@ -64,7 +64,7 @@ jobs:
   add_tag:
     name: Add SELinux module version tag on the branch
 
-    if: ${{ github.event_name == "push" && ( github.ref_name == "main" || startsWith(github.ref_name, "release/" ) }}
+    if: github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/' )
 
     needs: build
     
@@ -85,5 +85,4 @@ jobs:
           release_name: Release v${{ needs.build.semodule_vers }} candidate
           draft: true
           prerelease: true
-      
       
