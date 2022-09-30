@@ -8,13 +8,13 @@ on:
     types: [ published ]
       
 jobs:
-  build:
-    name: Create RPM Release
-    
-    runs-on: ubuntu-latest
-    
-    env:
-      SEMODULE: springboot
+  get_release_url:
+    name: Get release info
+
+    runs-on: [self-hosted, Linux]
+
+    outputs:
+      upload_url: ${{ steps.get_release.outputs.upload_url }}
 
     steps:
 
@@ -28,6 +28,24 @@ jobs:
         uses: bruceadams/get-release@v1.2.3
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+
+  build:
+    name: Build RPM and upload it to elease
+    
+    needs: get_release_url
+
+    runs-on: ubuntu-latest
+    
+    env:
+      SEMODULE: springboot
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          ref: ${{ github.ref }}
           
       - name: Prepare RPM spec file
         run: |
@@ -90,7 +108,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          upload_url: ${{ needs.get_release_url.outputs.upload_url }}
           asset_path: ${{ steps.get_binrpm_chars.outputs.rpm_file_path }}
           asset_name: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}
           asset_content_type: ${{ steps.rpm_build.outputs.rpm_content_type }}
@@ -101,7 +119,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          upload_url: ${{ needs.get_release_url.outputs.upload_url }}
           asset_path: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA256
           asset_name: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA256.txt
           asset_content_type: text/plain
@@ -112,7 +130,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          upload_url: ${{ needs.get_release_url.outputs.upload_url }}
           asset_path: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA512
           asset_name: ${{ steps.get_binrpm_chars.outputs.rpm_file_name }}.SHA512.txt
           asset_content_type: text/plain
