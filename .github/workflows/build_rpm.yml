@@ -78,7 +78,7 @@ jobs:
             
       - name: build RPM package
         id: rpm_build
-        uses: naveenrajm7/rpmbuild@master
+        uses: hubertqc/rpmbuild@master
         with:
           spec_file: "rpm/selinux_${SEMODULE}.spec"
 
