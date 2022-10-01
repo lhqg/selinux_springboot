@@ -39,6 +39,7 @@ jobs:
     
     env:
       SEMODULE: springboot
+      RPM_SPEC_FILE: rpm/selinux_springboot.spec
 
     steps:
 
@@ -67,8 +68,8 @@ jobs:
             
             if [ -n "${version_from_tag}" -a -n "${version_from_semodule}" -a "${version_from_tag}" = "${version_from_semodule}" ]
             then
-                echo "::notice title=RPMspec::Replacing the SELinux module version (${version_from_semodule}) in the RPM spec file."
-                sed -i -E "s,#\{version\}#,${version_from_semodule}," rpm/selinux_${SEMODULE}.spec
+                echo "::notice title=RPMspec::Replacing the SELinux module version (${version_from_semodule}) in the RPM spec file (${RPM_SPEC_FILE})."
+                sed -i -E "s,#\{version\}#,${version_from_semodule}," ${RPM_SPEC_FILE}
             else
               [ -z "${version_from_tag}" ] && echo "::error title=FATAL::Tag does look like a valid version."
               [ -z "${version_from_semodule}" ] && echo "::error title=FATAL:: Could not get SELinux module version."
@@ -80,7 +81,7 @@ jobs:
         id: rpm_build
         uses: hubertqc/rpmbuild@master
         with:
-          spec_file: "rpm/selinux_${SEMODULE}.spec"
+          spec_file: "${RPM_SPEC_FILE}"
 
       - name: Get binary RPM package characteritics
         id: get_binrpm_chars
