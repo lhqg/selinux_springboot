@@ -81,7 +81,8 @@ jobs:
         id: rpm_build
         uses: hubertqc/rpmbuild@master
         with:
-          spec_file: "${RPM_SPEC_FILE}"
+#           spec_file: "${RPM_SPEC_FILE}"
+         spec_file: "rpm/selinux_springboot.spec"
 
       - name: Get binary RPM package characteritics
         id: get_binrpm_chars
