@@ -16,8 +16,8 @@ jobs:
 
     outputs:
       upload_url: ${{ steps.get_release_url.outputs.upload_url }}
-      version_number: ${{ steps.get_release.outputs.version }}
-      release_number: ${{ steps.get_release.outputs.release }}
+      version_number: ${{ steps.get_release_version.outputs.version }}
+      release_number: ${{ steps.get_release_version.outputs.release }}
 
     steps:
 
