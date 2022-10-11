@@ -1,6 +1,6 @@
 Name:      springboot-selinux
-Version:   #{version}#
-Release:   1
+Version:   %{provided_version}
+Release:   %{provided_release}%{?dist}
 Summary:	 SELinux policy module for Springboot applications
 License:	 GPLv2
 URL:       https://github.com/hubertqc/selinux_springboot
@@ -18,33 +18,39 @@ The systemd service unit name must start with springboot, the start script must 
 assigned the springboot_exec_t SELinux type.
 The Springboot application will run in the springboot_t domain.
 
+%clean
+%{__rm} -rf %{buildroot}
+
 %prep
 %setup -q
 
 %build
 
+make -f /usr/share/selinux/devel/Makefile -C %{_sourcedir} springboot.pp
+
+%install
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/packages/targeted
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/apps
 
-install -m 0444 se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/springboot.if
-cd se_module/ && tar cfvj %{buildroot}/usr/share/selinux/packages/targeted/springboot.pp.bz2 springboot.te springboot.fc
+install -m 0444 %{_sourcedir}/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/
+
+bzip2 %{_sourcedir}/springboot.pp
+install -m 0444 %{_sourcedir}/springboot.pp.bz2 %{buildroot}/usr/share/selinux/packages/targeted/
 
 %post
+
 mkdir -m 0700 /tmp/selinux-springboot
-cd /tmp/selinux-springboot/ && tar xfj /usr/share/selinux/packages/targeted/springboot.pp.bz2
-make -f /usr/share/selinux/devel/Makefile springboot.pp
-semodule -i springboot.pp
-bzip2 springboot.pp
-mv springboot.pp.bz2 /usr/share/selinux/packages/targeted/
-cd /tmp
+bzcat -dc /usr/share/selinux/packages/targeted/springboot.pp.bz2 > /tmp/selinux-springboot/springboot.pp
+semodule -i /tmp/selinux-springboot/springboot.pp
 rm -rf /tmp/selinux-springboot
 
 %postun
 semodule -r springboot
 
 %files
+%defattr(-,root,root,-)
 /usr/share/selinux/devel/include/apps/springboot.if
-%verify(not size filedigest mtime) /usr/share/selinux/packages/targeted/springboot.pp.bz2
+/usr/share/selinux/packages/targeted/springboot.pp.bz2
 
 %license LICENSE
 %doc    README.md
