@@ -1,7 +1,7 @@
 #
-# SELinux policy module RPM build
+# SELinux policy module RPMs build
 #
-name: "Build RPM to install SELinux policy module"
+name: "Build RPMs to install compiled SELinux policy module"
 
 on:
   release:
