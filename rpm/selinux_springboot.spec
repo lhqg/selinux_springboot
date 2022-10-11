@@ -40,7 +40,6 @@ install -m 0444 %{_sourcedir}/springboot.pp.bz2 %{buildroot}/usr/share/selinux/p
 %post
 
 mkdir -m 0700 /tmp/selinux-springboot
-for 
 bzcat -dc /usr/share/selinux/packages/targeted/springboot.pp.bz2 > /tmp/selinux-springboot/springboot.pp
 semodule -i /tmp/selinux-springboot/springboot.pp
 rm -rf /tmp/selinux-springboot
