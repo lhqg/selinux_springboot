@@ -4,9 +4,11 @@
 name: "Build RPM to install SELinux policy module"
 
 on:
-  release:
-    types: [ published ]
-      
+#  release:
+#    types: [ published ]
+ 
+  workflow_dispatch:
+ 
 jobs:
   get_release_url:
     name: Get release info
