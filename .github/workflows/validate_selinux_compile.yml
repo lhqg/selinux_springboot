@@ -11,6 +11,8 @@ on:
       - '**.te'
       - '**.fc'
       - '**.if'
+    tags-ignore:
+      - v*
       
   pull_request:
     branches: [ "main", "release/**" ]
@@ -19,14 +21,28 @@ on:
       - '**.fc'
       - '**.if'
 
-jobs:
-  build:
-    name: Validate SELinux code
-    env:
-      SEMODULE: springboot
-      
-    runs-on: [self-hosted, CentOS-8]
+env:
+  SEMODULE: springboot
 
+jobs:
+
+  compile:
+    name: Validate SELinux code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@main
+  
+  semodule_info:
+    name: Get SELinux module informations
+    needs: compile
+      
+    runs-on: ubuntu-latest
+
+    if: ( github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') ) )
+    
     permissions:
       actions: read
       contents: read
@@ -37,10 +53,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Compile
-        run: |
-          cd se_module/ && make -f /usr/share/selinux/devel/Makefile ${SEMODULE}.pp
 
       - name: Get SELinux policy module characteristics
         id: semodule_chars
@@ -66,16 +78,12 @@ jobs:
 
   add_tag:
     name: Add SELinux module version tag on the branch
+    needs: semodule_info
 
-    if: ( github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') ) ) || github.event_name == 'workflow_dispatch'
-
-    needs: build
-    
-    env:
-      SEMODULE: springboot
-      
     runs-on: ubuntu-latest
 
+    if: ( github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') ) )
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -84,8 +92,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.build.outputs.semodule_vers }}-candidate
-          release_name: Release v${{ needs.build.outputs.semodule_vers }} candidate
+          tag_name: v${{ needs.semodule_info.outputs.semodule_vers }}-candidate
+          release_name: Release v${{ needs.semodule_info.outputs.semodule_vers }} candidate
           draft: true
           prerelease: true
       
