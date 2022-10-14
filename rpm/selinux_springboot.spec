@@ -1,18 +1,21 @@
 Name:		springboot-selinux
-Version:	%{provided_version}
-Release:	%{provided_release}%{?dist}
+Version:	%{_provided_version}
+Release:	%{_provided_release}%{?dist}
 Summary:	SELinux policy module for Springboot applications
 License:	GPLv2
 URL:		https://github.com/hubertqc/selinux_springboot
 #Source:	%{name}-%{version}.tar.gz
 BuildArch:	noarch
 
-Requires:	selinux-policy-devel
-Requires:	selinux-policy-targeted
+BuildRequires:	selinux-policy-devel
+BuildRequires:	make
+
+Requires:	selinux-policy-targeted %{?_sepol_minver_cond}
+Requires:	selinux-policy-targeted %{?_sepol_maxver_cond}
+
 Requires:	policycoreutils
 Requires:	policycoreutils-python-utils
 Requires:	libselinux-utils
-Requires:	make
 
 %description
 SELinux policy module to confine Springboot applications started using systemd.
@@ -46,8 +49,7 @@ mkdir -p -m 0755 %{buildroot}/%{_datarootdir}/%{name}
 install -m 0444 %{_builddir}/se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/
 install -m 0555 %{_builddir}/scripts/* %{buildroot}/%{_datarootdir}/%{name}/
 
-bzip2 %{_builddir}/springboot.pp
-install -m 0444 %{_builddir}/springboot.pp.bz2 %{buildroot}/usr/share/selinux/packages/targeted/
+install -m 0444 %{_builddir}/springboot.pp %{buildroot}/usr/share/selinux/packages/targeted/
 
 install -m 0444 %{_builddir}/{LICENSE,README.md} %{buildroot}/%{_docdir}/%{name}/
 
@@ -55,10 +57,7 @@ install -m 0444 %{_builddir}/{LICENSE,README.md} %{buildroot}/%{_docdir}/%{name}
 
 %post
 
-mkdir -m 0700 /tmp/selinux-springboot
-bzcat -dc /usr/share/selinux/packages/targeted/springboot.pp.bz2 > /tmp/selinux-springboot/springboot.pp
-semodule -i /tmp/selinux-springboot/springboot.pp
-rm -rf /tmp/selinux-springboot
+semodule -i /usr/share/selinux/packages/targeted/springboot.pp
 
 if selinuxenabled
 then
@@ -82,7 +81,7 @@ fi
 %defattr(-,root,root,-)
 
 /usr/share/selinux/devel/include/apps/springboot.if
-/usr/share/selinux/packages/targeted/springboot.pp.bz2
+/usr/share/selinux/packages/targeted/springboot.pp
 
 %dir %{_datarootdir}/%{name}
 %{_datarootdir}/%{name}/*
