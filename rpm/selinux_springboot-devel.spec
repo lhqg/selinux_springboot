@@ -26,7 +26,6 @@ SELinux policy development interface for Springboot policy module.
 %install
 
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/apps
-
 install -m 0444 %{_builddir}/se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/
 
 ###################################

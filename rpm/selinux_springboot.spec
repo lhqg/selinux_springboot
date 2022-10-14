@@ -42,15 +42,11 @@ make -f /usr/share/selinux/devel/Makefile -C %{_builddir} springboot.pp
 %install
 
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/packages/targeted
-mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/apps
 mkdir -p -m 0755 %{buildroot}/%{_docdir}/%{name}
 mkdir -p -m 0755 %{buildroot}/%{_datarootdir}/%{name}
 
-install -m 0444 %{_builddir}/se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/
 install -m 0555 %{_builddir}/scripts/* %{buildroot}/%{_datarootdir}/%{name}/
-
 install -m 0444 %{_builddir}/springboot.pp %{buildroot}/usr/share/selinux/packages/targeted/
-
 install -m 0444 %{_builddir}/{LICENSE,README.md} %{buildroot}/%{_docdir}/%{name}/
 
 ###################################
@@ -80,12 +76,11 @@ fi
 %files
 %defattr(-,root,root,-)
 
-/usr/share/selinux/devel/include/apps/springboot.if
 /usr/share/selinux/packages/targeted/springboot.pp
 
-%dir %{_datarootdir}/%{name}
+%dir	%{_datarootdir}/%{name}
 %{_datarootdir}/%{name}/*
 
-%dir %{_docdir}/%{name}
-%license  %{_docdir}/%{name}/LICENSE
-%doc      %{_docdir}/%{name}/README.md
+%dir		%{_docdir}/%{name}
+%license 	%{_docdir}/%{name}/LICENSE
+%doc		%{_docdir}/%{name}/README.md
