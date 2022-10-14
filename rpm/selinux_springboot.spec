@@ -1,15 +1,17 @@
-Name:      springboot-selinux
-Version:   %{provided_version}
-Release:   %{provided_release}%{?dist}
-Summary:	 SELinux policy module for Springboot applications
-License:	 GPLv2
-URL:       https://github.com/hubertqc/selinux_springboot
-#Source:    %{name}-%{version}.tar.gz
-BuildArch: noarch
+Name:		springboot-selinux
+Version:	%{provided_version}
+Release:	%{provided_release}%{?dist}
+Summary:	SELinux policy module for Springboot applications
+License:	GPLv2
+URL:		https://github.com/hubertqc/selinux_springboot
+#Source:	%{name}-%{version}.tar.gz
+BuildArch:	noarch
 
 Requires:	selinux-policy-devel
 Requires:	selinux-policy-targeted
 Requires:	policycoreutils
+Requires:	policycoreutils-python-utils
+Requires:	libselinux-utils
 Requires:	make
 
 %description
@@ -39,8 +41,10 @@ make -f /usr/share/selinux/devel/Makefile -C %{_builddir} springboot.pp
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/packages/targeted
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/apps
 mkdir -p -m 0755 %{buildroot}/%{_docdir}/%{name}
+mkdir -p -m 0755 %{buildroot}/%{_datarootdir}/%{name}
 
 install -m 0444 %{_builddir}/se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/
+install -m 0555 %{_builddir}/scripts/* %{buildroot}/%{_datarootdir}/%{name}/
 
 bzip2 %{_builddir}/springboot.pp
 install -m 0444 %{_builddir}/springboot.pp.bz2 %{buildroot}/usr/share/selinux/packages/targeted/
@@ -55,6 +59,13 @@ mkdir -m 0700 /tmp/selinux-springboot
 bzcat -dc /usr/share/selinux/packages/targeted/springboot.pp.bz2 > /tmp/selinux-springboot/springboot.pp
 semodule -i /tmp/selinux-springboot/springboot.pp
 rm -rf /tmp/selinux-springboot
+
+if selinuxenabled
+then
+  restorecon -RFi /{opt,srv}/springboot 
+  restorecon -RFi /{lib,etc}/systemd/system/springboot*
+  restorecon -RFi /var/{lib,log,run,tmp}/springboot
+fi
 
 ###################################
 
@@ -72,5 +83,10 @@ fi
 
 /usr/share/selinux/devel/include/apps/springboot.if
 /usr/share/selinux/packages/targeted/springboot.pp.bz2
+
+%dir %{_datarootdir}/%{name}
+%{_datarootdir}/%{name}/*
+
+%dir %{_docdir}/%{name}
 %license  %{_docdir}/%{name}/LICENSE
 %doc      %{_docdir}/%{name}/README.md
