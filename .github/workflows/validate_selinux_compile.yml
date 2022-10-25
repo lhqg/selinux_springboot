@@ -6,13 +6,15 @@ name: "Validate SELinux code"
 on:
   workflow_dispatch:
   
+concurrency: 
+  group: SELinux_compile_wkf_group
+
+
   push:
     paths:
       - '**.te'
       - '**.fc'
       - '**.if'
-    tags-ignore:
-      - v*
       
   pull_request:
     branches: [ "main", "release/**" ]
@@ -58,7 +60,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hubertqc/selinux_compile@fedora34
-
 
   compile_fedora35:
     name: Validate SELinux code (Fedora 35)
@@ -140,8 +141,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.semodule_info.outputs.semodule_vers }}-candidate
-          release_name: Release v${{ needs.semodule_info.outputs.semodule_vers }} candidate
+          tag_name: v${{ needs.semodule_info.outputs.semodule_vers }}-rc
+          release_name: Release candidate for v${{ needs.semodule_info.outputs.semodule_vers }}
           draft: true
           prerelease: true
       
