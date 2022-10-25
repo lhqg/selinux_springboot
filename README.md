@@ -97,13 +97,25 @@ Examples:
 
 ### SELinux booleans
 
-#### allow_springboot_http_connect      (default: `true`)
+#### allow_springboot_connectto_http      (default: `true`)
 When switch to `true`this boolean allows the Springboot application to connect to remote
 HTTP/HTTPS ports (locally assigned the `http_port_t` SELinux type).
 
-#### allow_springboot_self_connect      (default: `true`)
+#### allow_springboot_connectto_self      (default: `false`)
 When switch to `true`this boolean allows the Springboot application to connect to other remote
 Springboot application (locally assigned the `springboot_port_t` SELinux type).
+
+#### allow_springboot_connectto_ldap      (default: `false`)
+When switch to `true`this boolean allows the Springboot application to connect to remote
+LDAP/LDAPS ports (locally assigned the `ldap_port_t` SELinux type).
+
+#### allow_springboot_connectto_smtp      (default: `false`)
+When switch to `true`this boolean allows the Springboot application to connect to remote
+SMTP/SMTPS/submission ports (locally assigned the `smtp_port_t` SELinux type).
+
+#### Mutiple booleans allow_springboot_connectto_<DB>      (default: `false`)
+When switch to `true`these boolean allows the Springboot application to connect to remote
+database server ports: `couchdb`, `mongodb`, `mysql` (MariaDB), `oracle`, `pgsql` (PostgreSQL), `redis`.
 
 #### allow_springboot_dynamic_libs		(default: `false`)
 When switched to `true`, this boolean allows the Springboot application to create and use

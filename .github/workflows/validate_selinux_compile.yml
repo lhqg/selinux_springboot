@@ -26,22 +26,70 @@ env:
 
 jobs:
 
-  compile:
-    name: Validate SELinux code
-
+  compile_centos7:
+    name: Validate SELinux code (CentOS 7)
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@main
-  
-  semodule_info:
-    name: Get SELinux module informations
-    needs: compile
-      
+      - uses: hubertqc/selinux_compile@centos7
+
+  compile_centos8:
+    name: Validate SELinux code (CentOS 8)
     runs-on: ubuntu-latest
 
-    if: ( github.event_name == 'push' && ( github.ref_name == 'main' || startsWith(github.ref_name, 'release/') ) )
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@centos8
+
+  compile_centos9:
+    name: Validate SELinux code (CentOS 9)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@centos9
+
+  compile_fedora34:
+    name: Validate SELinux code (Fedora 34)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@fedora34
+
+
+  compile_fedora35:
+    name: Validate SELinux code (Fedora 35)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@fedora35
+
+  compile_fedora36:
+    name: Validate SELinux code (Fedora 36)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@fedora36
+
+  compile_fedora37:
+    name: Validate SELinux code (Fedora 37)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@fedora37
+
+
+  semodule_info:
+    name: Get SELinux module informations
+    needs: [ compile_centos7, compile_centos8, compile_centos9, compile_fedora34, compile_fedora35, compile_fedora36, compile_fedora37 ]
+      
+    runs-on: ubuntu-latest
     
     permissions:
       actions: read

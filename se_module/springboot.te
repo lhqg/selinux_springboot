@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.6.4)
+policy_module(springboot, 0.7.0)
 
 ########################################
 #
@@ -87,8 +87,19 @@ files_tmp_file(springboot_tmp_t)
 type		springboot_unit_file_t;
 systemd_unit_file(springboot_unit_file_t);
 
-bool	allow_springboot_http_connect		true;
-bool	allow_springboot_self_connect		false;
+bool	allow_springboot_connectto_http		true;
+bool	allow_springboot_connectto_self		false;
+
+bool	allow_springboot_connectto_ldap		false;
+bool	allow_springboot_connectto_smtp		false;
+
+bool	allow_springboot_connectto_oracle	false;
+bool	allow_springboot_connectto_mysql	false;
+bool	allow_springboot_connectto_pgsql	false;
+bool	allow_springboot_connectto_redis	false;
+bool	allow_springboot_connectto_couchdb	false;
+bool	allow_springboot_connectto_mongodb	false;
+
 
 bool	allow_springboot_dynamic_libs		false;
 bool	allow_springboot_purge_logs		false;
@@ -97,6 +108,16 @@ bool	allow_sysadm_write_springboot_files	false;
 
 gen_require(`
 	type	http_port_t;
+	type	smtp_port_t;
+	type	ldap_port_t;
+	type	oracle_port_t;
+	type	mysqld_port_t;
+	type	postgresql_port_t;
+	type	redis_port_t;
+	type	couchdb_port_t;
+	type	mongod_port_t;
+
+
 	type	node_t;
 
 	type	proc_t;
@@ -222,13 +243,47 @@ allow	springboot_t	node_t:tcp_socket			{ node_bind };
 
 allow	springboot_t	springboot_port_t:tcp_socket		name_bind;
 
-if (allow_springboot_http_connect) {
+if (allow_springboot_connectto_http) {
 	allow	springboot_t	http_port_t:tcp_socket		name_connect;
 }
 
-if (allow_springboot_self_connect) {
+if (allow_springboot_connectto_self) {
 	allow	springboot_t	springboot_port_t:tcp_socket	name_connect;
 }
+
+if (allow_springboot_connectto_ldap) {
+	allow	springboot_t	ldap_port_t:tcp_socket	name_connect;
+}
+
+if (allow_springboot_connectto_smtp) {
+	allow	springboot_t	smtp_port_t:tcp_socket	name_connect;
+}
+
+
+if (allow_springboot_connectto_oracle) {
+	allow	springboot_t	oracle_port_t:tcp_socket	name_connect;
+}
+
+if (allow_springboot_connectto_mysql) {
+	allow	springboot_t	mysqld_port_t:tcp_socket	name_connect;	
+}
+
+if (allow_springboot_connectto_pgsql) {
+	allow	springboot_t	postgresql_port_t:tcp_socket	name_connect;
+}
+
+if (allow_springboot_connectto_redis) {
+	allow	springboot_t	redis_port_t:tcp_socket	name_connect;
+}
+
+if (allow_springboot_connectto_couchdb) {
+	allow	springboot_t	couchdb_port_t:tcp_socket	name_connect;
+}
+
+if (allow_springboot_connectto_mongodb) {
+	allow	springboot_t	mongod_port_t:tcp_socket	name_connect;
+}
+
 
 #	Allow to consume authorized network services
 allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
