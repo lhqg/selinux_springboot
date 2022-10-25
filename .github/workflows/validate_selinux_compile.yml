@@ -3,12 +3,12 @@
 #
 name: "Validate SELinux code"
 
-on:
-  workflow_dispatch:
-  
 concurrency: 
   group: SELinux_compile_wkf_group
 
+
+on:
+  workflow_dispatch:
 
   push:
     paths:
