@@ -3,6 +3,9 @@
 #
 name: "Build RPMs to install compiled SELinux policy module"
 
+concurrency: 
+  group: SELinux_compile_wkf_group
+
 on:
   release:
     types: [ published ]
