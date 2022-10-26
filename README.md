@@ -105,6 +105,10 @@ HTTP/HTTPS ports (locally assigned the `http_port_t` SELinux type).
 When switch to `true`this boolean allows the Springboot application to connect to other remote
 Springboot application (locally assigned the `springboot_port_t` SELinux type).
 
+#### allow_springboot_connectto_pki_ca      (default: `false`)
+When switch to `true`this boolean allows the Springboot application to connect to remote
+PKI CA ports (locally assigned the `pki_ca_port_t` SELinux type).
+
 #### allow_springboot_connectto_ldap      (default: `false`)
 When switch to `true`this boolean allows the Springboot application to connect to remote
 LDAP/LDAPS ports (locally assigned the `ldap_port_t` SELinux type).
