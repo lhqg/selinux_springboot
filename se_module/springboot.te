@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 0.7.1)
+policy_module(springboot, 0.7.2)
 
 ########################################
 #
@@ -91,7 +91,6 @@ bool	allow_springboot_connectto_http		true;
 bool	allow_springboot_connectto_self		false;
 
 bool	allow_springboot_connectto_ldap		false;
-bool	allow_springboot_connectto_pki_ca	false;
 bool	allow_springboot_connectto_smtp		false;
 
 bool	allow_springboot_connectto_oracle	false;
@@ -110,7 +109,6 @@ bool	allow_sysadm_write_springboot_files	false;
 gen_require(`
 	type	http_port_t;
 	type	smtp_port_t;
-	type    pki_ca_port_t;
 	type	ldap_port_t;
 	type	oracle_port_t;
 	type	mysqld_port_t;
@@ -245,6 +243,8 @@ allow	springboot_t	node_t:tcp_socket			{ node_bind };
 
 allow	springboot_t	springboot_port_t:tcp_socket		name_bind;
 
+corenet_tcp_connect_ocsp_port(springboot_t)
+
 if (allow_springboot_connectto_http) {
 	allow	springboot_t	http_port_t:tcp_socket		name_connect;
 }
@@ -255,10 +255,6 @@ if (allow_springboot_connectto_self) {
 
 if (allow_springboot_connectto_ldap) {
 	allow	springboot_t	ldap_port_t:tcp_socket	name_connect;
-}
-
-if (allow_springboot_connectto_pki_ca) {
-	allow	springboot_t	pki_ca_port_t:tcp_socket	name_connect;
 }
 
 if (allow_springboot_connectto_smtp) {
