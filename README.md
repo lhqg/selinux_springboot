@@ -55,13 +55,19 @@ A typical directory layout for the Springboot application `my_app` would be:
 Files with `.so` and `.jar` extensions under the /opt/springboot and /srv/springboot trees
 will be assigned the *Springboot library* SELinux type.
 
-Files with `.jks`, `.jceks`, `.p12` or `.pkcs12`extensions placed in a `conf`or
+Files with `.jks`, `.jceks`, `.p12` or `.pkcs12` extensions placed in a `conf` or
 `properties` directory under /opt/springboot will be assigned the *Springboot 
-authentication/credentials* SELinux type. All files located in a `keys`directory under
- /opt/springboot will be assigned the same SELinux type.
+authentication/credentials* SELinux type `springboot_auth_t`.
+All files located in a `keys` directory under /opt/springboot will be assigned this SELinux
+ type. You may want to assign this type, using fcontext customizations, to your sensitive
+ files containing authentication data for your Springboot application (passwords, private keys,
+ tokens, ...).
+ Such files can only be read by the Springboot application, deployment tools (Ansible, Puppet, ...)
+ will need specific permissions to create/modify them.
+ (See also boolean `allow_sysadm_manage_springboot_auth_files` below).
 
 
-Should you prefer to used a different directory structure, you should consider using
+Should you prefer to use a different directory structure, you should consider using
 SELinux fcontext equivalence rules to map your specifics to the filesystem layout expected
 in the policy module, using the `semanage fcontext -a -e ORIGINAL CUSTOMISATION` command.
 
@@ -139,8 +145,8 @@ contents of Springboot application files: log, configuration, temp and transient
 files.
 
 #### allow_sysadm_write_springboot_files	(default: `false`)
-When switched to `true`, this boolean allows users running with the `sysadm_r`SELinux role
-and`sysadm_t`domain to:
+When switched to `true`, this boolean allows users running with the `sysadm_r` SELinux role
+and `sysadm_t` domain to:
 - fully manage temporary files,
 - delete and rename log files,
 - delete and rename transient/cache files,
@@ -149,6 +155,9 @@ and`sysadm_t`domain to:
 Otherwise, such users are only granted read permissions on all Springboot application
 files, except authentication/credentials files.
  
+#### allow_sysadm_manage_springboot_auth_files	(default: `false`)
+When switched to `true`, this boolean allows users running with the `sysadm_r` SELinux role
+and `sysadm_t` domain to fully manage Springboot authentication files.
 
 ### Starting the Springboot application
 
