@@ -28,6 +28,8 @@
 
 /(lib|etc)/systemd/system/springboot@?.*					gen_context(system_u:object_r:springboot_unit_file_t,s0)
 #
+/run/springboot(/.*)?								gen_context(system_u:object_r:springboot_run_t,s0)
+#
 /var/log/springboot(/.*)?							gen_context(system_u:object_r:springboot_log_t,s0)
 /var/run/springboot(/.*)?							gen_context(system_u:object_r:springboot_run_t,s0)
 /var/tmp/springboot(/.*)?							gen_context(system_u:object_r:springboot_tmp_t,s0)
