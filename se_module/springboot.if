@@ -84,3 +84,24 @@ interface(`springboot_allow_consumed_service',`
 	typeattribute	$1_port_t	springboot_consumed_svc_type;
 ')
 
+########################################
+## <summary>
+##      Grant permissions to deploy Springboot application
+##  files (create/read/delete/write) and to manage the Springboot services.
+## </summary>
+## <param name="service">
+##      <summary>
+##      The domain name prefix to grant the deployment permissions to.
+##	e.g.: ansible
+##      </summary>
+## </param>
+#
+interface(`springboot_deploy_domain',`
+	gen_require(`
+		type		$1_t;
+		attribute	springboot_deploy_domain;
+	')
+	
+	typeattribute	$1_t	springboot_deploy_domain;
+')
+
