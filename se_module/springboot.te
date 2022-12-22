@@ -38,9 +38,10 @@ attribute	springboot_deploy_file_type;
 attribute	springboot_consumed_svc_type;
 attribute	springboot_monitoring_port_type;
 
-attribute	springboot_deploy_domain;
 
 systemd_domain_template(springboot)
+typeattribute	springboot_exec_t	springboot_file_type;
+typeattribute	springboot_exec_t	springboot_deploy_file_type;
 
 type		springboot_port_t;
 typeattribute	springboot_port_t	springboot_consumed_svc_type;
@@ -306,7 +307,6 @@ allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
 allow	springboot_t	springboot_monitoring_port_type:tcp_socket	name_bind;
 
 
-
 #	Permissions	on	Springboot	specific	files/dirs
 
 allow	springboot_t	springboot_file_type:dir					list_dir_perms;
@@ -369,55 +369,6 @@ if	(allow_springboot_purge_logs)	{
 dontaudit	springboot_t	domain:dir	getattr;
 dontaudit	springboot_t	domain:file	getattr;
 
-#
-## Permissions for the deployment tool/system
-#
-allow	springboot_deploy_domain	springboot_file_type:dir					list_dir_perms;
-allow	springboot_deploy_domain	springboot_file_type:notdevfile_class_set	getattr;
-allow	springboot_deploy_domain	springboot_file_type:file					read_file_perms;
-allow	springboot_deploy_domain	springboot_file_type:lnk_file				read_lnk_file_perms;
-
-allow	springboot_deploy_domain	springboot_var_t:dir	{ create_dir_perms rw_dir_perms };
-allow	springboot_deploy_domain	springboot_bin_t:dir	{ create_dir_perms rw_dir_perms };
-
-allow	springboot_deploy_domain	springboot_deploy_file_type:dir			rw_dir_perms;
-allow	springboot_deploy_domain	springboot_deploy_file_type:file		{ create_file_perms delete_file_perms };
-allow	springboot_deploy_domain	springboot_deploy_file_type:lnk_file	{ create_lnk_file_perms delete_lnk_file_perms };
-
-allow	springboot_deploy_domain	springboot_dynlib_t:dir			manage_dir_perms;
-allow	springboot_deploy_domain	springboot_dynlib_t:file		delete_file_perms;
-allow	springboot_deploy_domain	springboot_dynlib_t:lnk_file	delete_lnk_file_perms;
-
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_conf_t,	dir, "conf" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_conf_t,	dir, "env" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_conf_t,	dir, "properties" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_exec_t,	dir, "service" )
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_lib_t,	dir, "lib" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_lib_t,	dir, "app" )
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_auth_t,	dir, "keys" )
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_run_t,	dir, "run" )
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_exec_t,	springboot_exec_t,	{ file lnk_file } )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_exec_t,	springboot_exec_t,	file,	"springboot_service" )
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_conf_t,	springboot_conf_t,	{ dir file lnk_file } )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_lib_t,	springboot_lib_t,	{ dir file lnk_file} )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_bin_t,	springboot_bin_t,	{ dir file lnk_file } )
-
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_tmp_t,		dir,	"temp" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_tmp_t,		dir,	"tmp" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_run_t,		dir,	"cache" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_run_t,		dir,	"work" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_run_t,		dir,	"run" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_dynlib_t,	dir,	"dynlib" )
-filetrans_add_pattern(springboot_deploy_domain,	springboot_var_t,	springboot_dynlib_t,	dir,	"dynapp" )
-
-allow	springboot_deploy_domain	springboot_unit_file_t:file		read_file_perms;
-allow	springboot_deploy_domain	springboot_unit_file_t:service	manage_service_perms;
 
 #
 ##	Permissions for Sys admins (sysadm_t)

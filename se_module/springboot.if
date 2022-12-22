@@ -96,12 +96,139 @@ interface(`springboot_allow_consumed_service',`
 ##      </summary>
 ## </param>
 #
-interface(`springboot_deployer_domain',`
+interface(`springboot_deployer',`
 	gen_require(`
 		type		$1_t;
-		attribute	springboot_deploy_domain;
+
+		type		springboot_var_t;
+		type		springboot_bin_t;
+		type		springboot_lib_t;
+		type		springboot_run_t;
+		type		springboot_dynlib_t;
+		type		springboot_conf_t;
+		type		springboot_tmp_t;
+		type		springboot_exec_t;
+
+		type		springboot_unit_file_t;
+
+		attribute	springboot_file_type;
+		attribute	springboot_deploy_file_type;
 	')
-	
-	typeattribute	$1_t	springboot_deploy_domain;
+
+	# Allow deployer to read Springboot files
+
+	allow	$1_t	springboot_file_type:dir					list_dir_perms;
+	allow	$1_t	springboot_file_type:notdevfile_class_set	getattr;
+	allow	$1_t	springboot_file_type:file					read_file_perms;
+	allow	$1_t	springboot_file_type:lnk_file				read_lnk_file_perms;
+
+	# Allow deployer to create directories at top-level directories
+	allow	$1_t	springboot_var_t:dir	{ create_dir_perms rw_dir_perms };
+	allow	$1_t	springboot_bin_t:dir	{ create_dir_perms rw_dir_perms };
+
+	# Allow deployer to create/delete generic Springboot files
+	allow	$1_t	springboot_deploy_file_type:dir			rw_dir_perms;
+	allow	$1_t	springboot_deploy_file_type:file		{ create_file_perms delete_file_perms };
+	allow	$1_t	springboot_deploy_file_type:lnk_file	{ create_lnk_file_perms delete_lnk_file_perms };
+
+	# Allow full management on Springboot auto-deployed library files 
+	allow	$1_t	springboot_dynlib_t:dir			manage_dir_perms;
+	allow	$1_t	springboot_dynlib_t:file		delete_file_perms;
+	allow	$1_t	springboot_dynlib_t:lnk_file	delete_lnk_file_perms;
+
+	# Allow deployer to deploy specific subdirs in the Springboot instance static directory
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_conf_t,	dir, "conf" )
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_conf_t,	dir, "env" )
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_conf_t,	dir, "properties" )
+
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_lib_t,	dir, "lib" )
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_lib_t,	dir, "app" )
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_run_t,	dir, "run" )
+
+	filetrans_add_pattern($1_t,	springboot_conf_t,	springboot_conf_t,	{ dir file lnk_file } )
+	filetrans_add_pattern($1_t,	springboot_lib_t,	springboot_lib_t,	{ dir file lnk_file} )
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_bin_t,	{ dir file lnk_file } )
+
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_exec_t,	dir,	"service" )
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_exec_t,	file,	"springboot_service" )
+	filetrans_add_pattern($1_t,	springboot_exec_t,	springboot_exec_t,	{ file lnk_file } )
+
+	# Allow deployer to deploy specifi directories in the Springboot instance runtime tree
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_tmp_t,		dir,	"temp" )
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_tmp_t,		dir,	"tmp" )
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_run_t,		dir,	"cache" )
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_run_t,		dir,	"work" )
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_run_t,		dir,	"run" )
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_dynlib_t,	dir,	"dynlib" )
+	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_dynlib_t,	dir,	"dynapp" )
+
+	# Allow deployer to manage Springboot services (stop/start/enable/disable...)
+	allow	$1_t	springboot_unit_file_t:file		read_file_perms;
+	allow	$1_t	springboot_unit_file_t:service	manage_service_perms;
+
+')
+
+
+
+########################################
+## <summary>
+##      Grant permissions to deploy Springboot application
+##  systemd unit files (create/read/delete/write).
+## </summary>
+## <param name="dom_prefix">
+##      <summary>
+##      The domain name prefix to grant the deployment permissions to.
+##	e.g.: ansible
+##      </summary>
+## </param>
+#
+interface(`springboot_systemd_deployer',`
+	gen_require(`
+		type		$1_t;
+		type		springboot_unit_file_t;
+		type		systemd_unit_file_t;
+	')
+
+	# Allow deployer to deploy Springboot systemd unit files
+	allow	springboot_unit_file_t:dir	rw_dir_perms;
+	allow	springboot_unit_file_t:file	{ create_file_perms delete_file_perms };
+
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file, "springboot.service" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir, "springboot.service.d" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file, "springboot@.service" )
+
+	filetrans_add_pattern($1_t,	springboot_unit_file_t,	springboot_unit_file_t,	{ dir file lnk_file } )
+')
+
+
+########################################
+## <summary>
+##      Grant permissions to deploy Springboot application
+##  authentication files (create/read/delete/write).
+## </summary>
+## <param name="dom_prefix">
+##      <summary>
+##      The domain name prefix to grant the deployment permissions to.
+##	e.g.: ansible
+##      </summary>
+## </param>
+#
+interface(`springboot_auth_deployer',`
+	gen_require(`
+		type		$1_t;
+
+		type		springboot_bin_t;
+		type		springboot_auth_t;
+	')
+
+	# Allow deployer to create/remove auth files directories
+	allow	$1_t	springboot_auth_t:dir	{ create_dir_perms rw_dir_perms };
+
+	# Allow deployer to create/delete Springboot auth files
+	allow	$1_t	springboot_auth_t:file		{ create_file_perms delete_file_perms append_file_perms write_file_perms };
+	allow	$1_t	springboot_auth_t:lnk_file	{ create_lnk_file_perms delete_lnk_file_perms };
+
+	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_auth_t,	dir, "keys" )
+	filetrans_add_pattern($1_t,	springboot_auth_t,	springboot_auth_t,	{ dir file lnk_file } )
 ')
 
