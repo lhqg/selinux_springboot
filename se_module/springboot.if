@@ -89,14 +89,14 @@ interface(`springboot_allow_consumed_service',`
 ##      Grant permissions to deploy Springboot application
 ##  files (create/read/delete/write) and to manage the Springboot services.
 ## </summary>
-## <param name="service">
+## <param name="dom_prefix">
 ##      <summary>
 ##      The domain name prefix to grant the deployment permissions to.
 ##	e.g.: ansible
 ##      </summary>
 ## </param>
 #
-interface(`springboot_deploy_domain',`
+interface(`springboot_deployer_domain',`
 	gen_require(`
 		type		$1_t;
 		attribute	springboot_deploy_domain;
