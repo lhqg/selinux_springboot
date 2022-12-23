@@ -100,6 +100,9 @@ interface(`springboot_deployer',`
 	gen_require(`
 		type		$1_t;
 
+		attribute	springboot_file_type;
+		attribute	springboot_deploy_file_type;
+
 		type		springboot_var_t;
 		type		springboot_bin_t;
 		type		springboot_lib_t;
@@ -107,13 +110,26 @@ interface(`springboot_deployer',`
 		type		springboot_dynlib_t;
 		type		springboot_conf_t;
 		type		springboot_tmp_t;
+		type		springboot_log_t;
 		type		springboot_exec_t;
 
 		type		springboot_unit_file_t;
 
-		attribute	springboot_file_type;
-		attribute	springboot_deploy_file_type;
+		type		var_t;
+		type		var_lib_t;
+		type		var_run_t;
+		type		var_log_t;
+		type		usr_t;
+		type		tmp_t;
 	')
+
+	# Top-level dirs type transitions
+	type_transition $1_t var_t:dir		springboot_var_t "springboot" ;
+	type_transition $1_t var_lib_t:dir	springboot_var_t "springboot" ;
+	type_transition $1_t var_run_t:dir	springboot_run_t "springboot" ;
+	type_transition $1_t var_log_t:dir	springboot_log_t "springboot" ;
+	type_transition $1_t tmp_t:dir		springboot_tmp_t "springboot" ;
+	type_transition $1_t usr_t:dir		springboot_bin_t "springboot" ;
 
 	# Allow deployer to read Springboot files
 
@@ -123,13 +139,14 @@ interface(`springboot_deployer',`
 	allow	$1_t	springboot_file_type:lnk_file				read_lnk_file_perms;
 
 	# Allow deployer to create directories at top-level directories
-	allow	$1_t	springboot_var_t:dir	{ create_dir_perms rw_dir_perms };
-	allow	$1_t	springboot_bin_t:dir	{ create_dir_perms rw_dir_perms };
+	allow	$1_t	springboot_var_t:dir	{ create_dir_perms delete_dir_perms rw_dir_perms };
+	allow	$1_t	springboot_bin_t:dir	{ create_dir_perms delete_dir_perms rw_dir_perms };
+	allow	$1_t	springboot_log_t:dir	{ create_dir_perms list_dir_perms };
 
 	# Allow deployer to create/delete generic Springboot files
 	allow	$1_t	springboot_deploy_file_type:dir			rw_dir_perms;
-	allow	$1_t	springboot_deploy_file_type:file		{ create_file_perms delete_file_perms };
-	allow	$1_t	springboot_deploy_file_type:lnk_file	{ create_lnk_file_perms delete_lnk_file_perms };
+	allow	$1_t	springboot_deploy_file_type:file		manage_file_perms;
+	allow	$1_t	springboot_deploy_file_type:lnk_file	manage_lnk_file_perms;
 
 	# Allow full management on Springboot auto-deployed library files 
 	allow	$1_t	springboot_dynlib_t:dir			manage_dir_perms;
@@ -190,8 +207,8 @@ interface(`springboot_systemd_deployer',`
 	')
 
 	# Allow deployer to deploy Springboot systemd unit files
-	allow	springboot_unit_file_t:dir	rw_dir_perms;
-	allow	springboot_unit_file_t:file	{ create_file_perms delete_file_perms };
+	allow	$1_t	springboot_unit_file_t:dir	{ create_dir_perms delete_dir_perms rw_dir_perms };
+	allow	$1_t	springboot_unit_file_t:file	{ create_file_perms delete_file_perms };
 
 	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file, "springboot.service" )
 	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir, "springboot.service.d" )
@@ -222,7 +239,7 @@ interface(`springboot_auth_deployer',`
 	')
 
 	# Allow deployer to create/remove auth files directories
-	allow	$1_t	springboot_auth_t:dir	{ create_dir_perms rw_dir_perms };
+	allow	$1_t	springboot_auth_t:dir	{ create_dir_perms delete_dir_perms rw_dir_perms };
 
 	# Allow deployer to create/delete Springboot auth files
 	allow	$1_t	springboot_auth_t:file		{ create_file_perms delete_file_perms append_file_perms write_file_perms };
