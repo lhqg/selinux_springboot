@@ -170,7 +170,7 @@ interface(`springboot_deployer',`
 	filetrans_add_pattern($1_t,	springboot_bin_t,	springboot_exec_t,	file,	"springboot_service" )
 	filetrans_add_pattern($1_t,	springboot_exec_t,	springboot_exec_t,	{ file lnk_file } )
 
-	# Allow deployer to deploy specifi directories in the Springboot instance runtime tree
+	# Allow deployer to deploy specific directories in the Springboot instance runtime tree
 	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_tmp_t,		dir,	"temp" )
 	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_tmp_t,		dir,	"tmp" )
 	filetrans_add_pattern($1_t,	springboot_var_t,	springboot_run_t,		dir,	"cache" )
@@ -210,11 +210,44 @@ interface(`springboot_systemd_deployer',`
 	allow	$1_t	springboot_unit_file_t:dir	{ create_dir_perms delete_dir_perms rw_dir_perms };
 	allow	$1_t	springboot_unit_file_t:file	{ create_file_perms delete_file_perms };
 
-	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file, "springboot.service" )
-	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir, "springboot.service.d" )
-	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file, "springboot@.service" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file,	"springboot.service" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir,	"springboot.service.d" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file,	"springboot@.service" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir,	"springboot@.service.d" )
 
 	filetrans_add_pattern($1_t,	springboot_unit_file_t,	springboot_unit_file_t,	{ dir file lnk_file } )
+')
+
+########################################
+## <summary>
+##      Grant permissions to deploy Springboot application
+##  systemd unit files (create/read/delete/write) for a specific unit instance.
+## </summary>
+## <param name="dom_prefix">
+##      <summary>
+##      The domain name prefix to grant the deployment permissions to.
+##	e.g.: ansible
+##      </summary>
+## </param>
+## <param name="unit_intance">
+##      <summary>
+##      The name of the systemd service unit instance.
+##	e.g.: my_app
+##      </summary>
+## </param>
+#
+interface(`springboot_systemd_unit_instance_deployer',`
+	gen_require(`
+		type		$1_t;
+		type		springboot_unit_file_t;
+		type		systemd_unit_file_t;
+	')
+
+	springboot_systemd_deployer($1)
+
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	file,	"springboot@$2.service" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir,	"springboot@$2.service.d" )
+
 ')
 
 
