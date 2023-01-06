@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.0.0)
+policy_module(springboot, 1.1.0)
 
 ########################################
 #
@@ -33,10 +33,15 @@ policy_module(springboot, 1.0.0)
 ########################################
 
 attribute	springboot_file_type;
+attribute	springboot_deploy_file_type;
+
 attribute	springboot_consumed_svc_type;
 attribute	springboot_monitoring_port_type;
 
+
 systemd_domain_template(springboot)
+typeattribute	springboot_exec_t	springboot_file_type;
+typeattribute	springboot_exec_t	springboot_deploy_file_type;
 
 type		springboot_port_t;
 typeattribute	springboot_port_t	springboot_consumed_svc_type;
@@ -49,6 +54,7 @@ corenet_port(springboot_monitoring_port_t)
 
 type		springboot_conf_t;
 typeattribute	springboot_conf_t	springboot_file_type;
+typeattribute	springboot_conf_t	springboot_deploy_file_type;
 files_config_file(springboot_conf_t)
 
 type		springboot_auth_t;
@@ -65,23 +71,28 @@ files_type(springboot_var_t)
 
 type 		springboot_run_t;
 typeattribute	springboot_run_t	springboot_file_type;
+typeattribute	springboot_run_t	springboot_deploy_file_type;
 files_type(springboot_run_t)
 
 type		springboot_bin_t;
 typeattribute	springboot_bin_t	springboot_file_type;
+typeattribute	springboot_bin_t	springboot_deploy_file_type;
 application_executable_file(springboot_bin_t)
 
 type		springboot_lib_t;
 typeattribute	springboot_lib_t	springboot_file_type;
+typeattribute	springboot_lib_t	springboot_deploy_file_type;
 files_type(springboot_lib_t)
 
 type		springboot_dynlib_t;
 typeattribute	springboot_dynlib_t	springboot_file_type;
+typeattribute	springboot_dynlib_t	springboot_deploy_file_type;
 files_type(springboot_dynlib_t)
 
 
 type		springboot_tmp_t;
 typeattribute	springboot_tmp_t	springboot_file_type;
+typeattribute	springboot_tmp_t	springboot_deploy_file_type;
 files_tmp_file(springboot_tmp_t)
 
 type		springboot_unit_file_t;
@@ -296,16 +307,15 @@ allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
 allow	springboot_t	springboot_monitoring_port_type:tcp_socket	name_bind;
 
 
-
 #	Permissions	on	Springboot	specific	files/dirs
 
-allow	springboot_t	springboot_file_type:dir			list_dir_perms;
+allow	springboot_t	springboot_file_type:dir					list_dir_perms;
 allow	springboot_t	springboot_file_type:notdevfile_class_set	getattr;
-allow	springboot_t	springboot_file_type:file			read_file_perms;
-allow	springboot_t	springboot_file_type:lnk_file			read_lnk_file_perms;
+allow	springboot_t	springboot_file_type:file					read_file_perms;
+allow	springboot_t	springboot_file_type:lnk_file				read_lnk_file_perms;
 
-allow	springboot_t	springboot_bin_t:file			exec_file_perms;
-allow	springboot_t	springboot_lib_t:file			map;
+allow	springboot_t	springboot_bin_t:file						exec_file_perms;
+allow	springboot_t	springboot_lib_t:file						map;
 
 if	(allow_springboot_dynamic_libs)	{
 	allow	springboot_t	springboot_dynlib_t:dir		{ create_dir_perms rw_dir_perms };
@@ -359,6 +369,7 @@ if	(allow_springboot_purge_logs)	{
 dontaudit	springboot_t	domain:dir	getattr;
 dontaudit	springboot_t	domain:file	getattr;
 
+
 #
 ##	Permissions for Sys admins (sysadm_t)
 #
@@ -379,7 +390,7 @@ allow	sysadm_t	springboot_log_t:file		read_file_perms;
 allow	sysadm_t	springboot_exec_t:file		read_file_perms;
 
 
-allow	sysadm_t	springboot_unit_file_t:file	read_file_perms;
+allow	sysadm_t	springboot_unit_file_t:file		read_file_perms;
 allow	sysadm_t	springboot_unit_file_t:service	manage_service_perms;
 
 if	(allow_sysadm_write_springboot_files)	{
