@@ -159,6 +159,60 @@ files, except authentication/credentials files.
 When switched to `true`, this boolean allows users running with the `sysadm_r` SELinux role
 and `sysadm_t` domain to fully manage Springboot authentication files.
 
+### Interfaces for deployment tools
+
+When the deployment tool (Ansible, Puppet, ...) for the Springboot application runs not unconfined on the target host,
+it becomes necessary to grant it permissions to create/modify/delete the Springboot application files.
+This is achieved using SELinux code interfaces to create and compile small additionnal SELinux policy modules.
+
+For obvious security reasons, the deployment tool should not be allowed to delete log files.
+
+Each interface takes the SELinux domain prefix of the deployment tool as its first argument.
+Eg: `ansible` for Ansible if the SELinux domain is `ansible_t`.
+
+#### `springboot_deployer` interface
+
+This interface grants permissions to deploy (create/read/write) and clean up (delete) Springboot application files and directories.
+It also allows the deployment tool to manage the Springboot systemd units (services/targets/...).
+
+The scope of actions on the main Linux operating system directories is limited to:
+- create a `springboot` subdirectory under /opt, /var/lib, /var/log, /srv, /run, ...
+- create subdirectories in the `springboot` directores above.
+
+The scope of actions on Springboot application files and directories is limited to the following types:
+- fully manage configuration files (and symlinks)
+- fully manage transient (tmp, run) files (and symlinks)
+- fully manage application (bin, lib, dynlibs) files (and symlinks)
+
+The scope of actions on the systemd units is limited to:
+- read the Springboot systemd unit files (and diretcories)
+- stop/start/query/reload/enable/disable units
+
+#### `springboot_auth_deployer` interface
+
+This interface allows the deployment tool to deploy Springboot application files with sensitive authentication information (i.e. files with `springboot_auth_t` SELinux type).
+
+#### `springboot_systemd_deployer` interface
+
+This interface grants permissions to deploy systemd Springboot unit files (and directories).
+
+The scope of actions on the Linux system main systemd directories is limited to deploying (creating/writing) unit files/diretcories with the resulting SELinux type `springboot_unit_file_t`.
+Then the deployment tool is allowed to fully manage those files/directories.
+
+#### `springboot_systemd_unit_instance_deployer` interface
+
+This interface should be used when Springboot application services are managed as systemd instances of the `springboot@` template service.
+The `springboot_systemd_unit_instance_deployer` interface needs the service instance name as its second argument.
+
+Then the deployment tool is granted permission to create unit files/directories for that service instance.
+
+Usage example:
+```
+springboot_systemd_unit_instance_deployer(ansible, myapp)
+```
+Will allow the Ansible domain `ansible_t` to create/start/activate/deactivate the `springboot@myapp.service` unit instance.
+
+
 ### Starting the Springboot application
 
 The Springboot application should always and ony be started as a **systemd** service using
