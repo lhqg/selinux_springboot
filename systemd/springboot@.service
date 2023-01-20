@@ -1,0 +1,34 @@
+[Unit]
+Description=Springboot Server - %I
+
+Requires=network-online.target time-sync.target
+After=network-online.target time-sync.target basic.target
+
+[Service]
+Type=forking
+
+PrivateTmp=true
+ProtectSystem=true
+PrivateDevices=true
+
+User=springboot
+Group=springboot
+
+WorkingDirectory=/opt/springboot/%I
+EnvironmentFile=/opt/springboot/%I/env
+
+ExecStartPre=/opt/springboot/bin/springboot-service.sh %I cleanup
+ExecStartPre=/opt/springboot/bin/springboot-service.sh %I precheck
+
+ExecStart=/opt/springboot/bin/springboot-service %I start
+
+ExecStartPost=/opt/springboot/bin/springboot-service.sh %I postcheck
+
+ExecStopPost=/opt/springboot/bin/springboot-service.sh %I cleanup
+
+TimeoutStopSec=120s
+
+SuccessExitStatus=1 143
+
+[Install]
+WantedBy=springboot.target
