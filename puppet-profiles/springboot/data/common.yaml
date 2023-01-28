@@ -1,0 +1,22 @@
+---
+springboot::opt_vg: ~
+springboot::srv_vg: ~
+springboot::log_vg: ~
+springboot::springboot_uid: 5000
+springboot::springboot_gid: 5000
+springboot::allow_springboot_connectto_http: true
+springboot::allow_springboot_connectto_self: false
+springboot::allow_springboot_connectto_ldap: false
+springboot::allow_springboot_connectto_smtp: false
+springboot::allow_springboot_connectto_oracle: false
+springboot::allow_springboot_connectto_mysql: false
+springboot::allow_springboot_connectto_pgsql: false
+springboot::allow_springboot_connectto_redis: false
+springboot::allow_springboot_connectto_couchdb: false
+springboot::allow_springboot_connectto_mongodb: false
+springboot::allow_springboot_dynamic_libs: false
+springboot::allow_springboot_purge_logs: false
+springboot::allow_webadm_read_springboot_files: false
+springboot::allow_sysadm_write_springboot_files: false
+springboot::allow_sysadm_manage_springboot_auth_files: false
+springboot::enable_systemd_target: true

@@ -1,0 +1,74 @@
+{
+  "name": "hubertqc-springboot",
+  "version": "1.0.0",
+  "author": "Hubert Quarantel-Colombani <hubert@quarantel.name>",
+  "summary": "Creates core Linux resources for Springboot application - deploy App",
+  "license": "GPL-2.0",
+  "source": "https://github.com/hubertqc/selinux_springboot",
+  "project_page": "https://github.com/hubertqc/selinux_springboot",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 6.0.0 < 9.0.0"
+    },
+    {
+      "name": "puppetlabs-lvm",
+      "version_requirement": ">= 1.0.0 < 2.0.0"
+    },
+    {
+      "name": "hubertqc-mountpoint",
+      "version_requirement": ">= 1.0.0 < 2.0.0"
+    },
+    {
+      "name": "voxpopuli-selinux",
+      "version_requirement": ">= 3.0.0 < 4.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "10"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "18.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 6.21.0 < 8.0.0"
+    }
+  ],
+  "pdk-version": "2.6.1",
+  "template-url": "pdk-default#2.7.1",
+  "template-ref": "tags/2.7.1-0-g9a16c87"
+}
