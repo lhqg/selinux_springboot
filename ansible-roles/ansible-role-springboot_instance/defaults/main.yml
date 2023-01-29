@@ -1,0 +1,72 @@
+---
+# Definition of defaults file for ansible-role-springboot_instance
+
+sb_become: yes
+
+sb_root: /opt/springboot
+sb_logroot: /var/log/springboot
+sb_srvroot: "/srv/springboot"
+
+sb_workdir: /var/tmp/springboot
+sb_appbase: "/opt/springboot/{{ sb_appname }}"
+
+sb_service_env_filename: "/opt/springboot/{{ sb_appname }}/env"
+
+sb_jar_location: "{{ sb_appbase }}/lib"
+sb_conf_src: "{{ playbook_dir }}/files/conf"
+sb_appbase_conf_location: "{{ sb_appbase }}/conf"
+sb_java_security_file: "{{ sb_appbase_conf_location }}/java.security"
+sb_keystores_dest: "{{ sb_appbase }}/keys"
+sb_log_dir: "/var/log/springboot/{{ sb_appname }}"
+sb_srv_dir: "/srv/springboot/{{ sb_appname }}"
+sb_run_handlers: yes
+sb_cleanup_entire_workdir: no
+sb_extra_files_dest: "{{ sb_jar_location }}"
+sb_appbase_mode: "0750"
+
+sb_listen_port: 8443
+
+sb_memory_max_heapsize_mb: 768
+sb_memory_min_heapsize: 384
+sb_memory_stacksize_kb: 220
+sb_memory_hugepages: no
+
+sb_i18n_lang: en_US.UTF-8
+
+sb_enable_service: yes
+sb_startup_timeout_sec: 10
+sb_app_log_file: "{{ sb_log_dir }}/{{ sb_appname }}-{{ sb_app_version }}.log"
+
+sb_java_version: 11
+sb_java_flavour: "openjdk"
+sb_java_extra_args: ""
+sb_java_tmpdir: "{{ sb_srv_dir }}"
+sb_log_symlink: no
+sb_prop_logging_path: "{{ sb_log_dir }}"
+
+sb_enable_dynlibs: false
+
+# dir permissions for "{{ sb_appbase }}/run/" used to store the running transient files
+sb_run_dir: "{{ sb_appbase }}/run"
+sb_run_dir_mode: "0750"
+
+# dir&files permissions for "{{ sb_jar_location }}/" & "{{ sb_jar_location }}/{{ sb_appjarname }}"
+# ( ! one should be sure that the running user have access to this location ! )
+sb_app_mode: "0750"
+
+# dir&files permissions for "{{ sb_appbase_conf_location }}/" , "{{ sb_appbase_conf_location }}//each_copied_conf-dir/" & "{{ sb_appbase_conf_location }}//each_copied_conf-dir/each_copied_conf-file":
+sb_conf_mode: "0750"
+
+# dir permissions and retention for "{{ sb_log_dir }}/" used to store the running jar logs
+sb_log_dir_mode: "0750"
+sb_log_dir_retention_days: 30
+
+# dir&files permissions for "{{ sb_extra_files_dest }}/" && "{{ sb_extra_files_dest }}/each_copied_extra_file"
+sb_extra_files_mode: "0750"
+
+# dir&files permissions for "{{ sb_keystores_dest }}/" && "{{ sb_keystores_dest }}/each_copied_keystore_file"
+sb_keystores_mode: "0750"
+
+sb_undeploy: false
+sb_remove_extra_files: false
+sb_remove_keystores: false

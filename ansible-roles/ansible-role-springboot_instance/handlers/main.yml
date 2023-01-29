@@ -1,0 +1,27 @@
+---
+- name: "Restore SELinux file contexts for Springboot instance"
+  shell: >
+    /bin/bash -c "/usr/sbin/restorecon -RFi {{ sb_appbase }} {{ sb_log_dir }} {{ sb_srv_dir }}"
+  become: "{{ sb_become }}"
+  listen: "restorecon_springboot_instance"
+
+- name: "Start Springboot instance"
+  service:
+    name: "{{ sb_service_name }}"
+    state: started
+  become: "{{ sb_become }}"
+  when: sb_run_handlers and sb_become
+
+- name: "Restart Springboot instance"
+  service:
+    name: "{{ sb_service_name }}"
+    state: restarted
+  become: "{{ sb_become }}"
+  when: sb_become
+
+- name: "Cleanup workdir"
+  file:
+    path: "{{ sb_workdir }}/{{ sb_appjarname if sb_cleanup_entire_workdir is not defined or not sb_cleanup_entire_workdir else '' }}"
+    state: absent
+  become: "{{ sb_become }}"
+  when: sb_run_handlers

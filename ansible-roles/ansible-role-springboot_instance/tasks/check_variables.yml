@@ -1,0 +1,35 @@
+---
+
+- name: "Check for mandatory variables"
+  fail:
+    msg: "{{ item }} was not defined. Please check the role documentation."
+  when: vars[item] is not defined
+  loop:
+    - sb_appname
+    - sb_app_version
+    - sb_appjarname
+    - sb_java_version
+    - sb_java_flavour
+
+- name: "Check for reserved variables"
+  fail:
+    msg: "{{ item }} variable is reserved for the role ansible-role-springboot ! Shouldn't be set/initialized !"
+  when: vars[item] is defined
+  loop:
+    - sb_service_stat_result
+    - sb_systemd_result
+    - sb_instance_stat_result
+    - sb_proc_stat_result
+    - sb_wait_for_pid
+    - sb_pkill_output_cmd
+    - sb_find_conf_files
+
+- name: "Check consistentcy for dynamic libraries enabling"
+  fail:
+    msg: "Variable sb_dynlib_dir_property must be defined when sb_enable_dynlibs is true !"
+  when: sb_enable_dynlibs and sb_dynlib_dir_property is not defined
+
+- name: "Check consistentcy for JVM memory options"
+  fail:
+    msg: "Variable sb_memory_max_heapsize_mb must be greater than or equal to sb_memory_min_heapsize_mb !"
+  when: sb_memory_max_heapsize_mb < sb_memory_min_heapsize_mb

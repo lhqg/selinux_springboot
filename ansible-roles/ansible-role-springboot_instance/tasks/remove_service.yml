@@ -1,0 +1,26 @@
+---
+# Remove Springboot service for RHEL 7/8
+# - name: Stop service
+#   ansible.builtin.service:
+#     name: "{{ sb_service_name }}"
+#     state: stopped
+#   become: "{{ sb_become }}"    
+
+- name: Disable spring boot service
+  systemd:
+    name: "{{ sb_service_name }}"
+    enabled: false
+    daemon_reload: yes
+  become: "{{ sb_become }}"
+
+- name: Remove service env file
+  ansible.builtin.file:
+    path: "{{ sb_service_env_filename }}"
+    state: absent
+  become: "{{ sb_become }}"
+
+- name: Remove systemd directory
+  ansible.builtin.file:
+    path: "/etc/systemd/system/springboot@{{ sb_appname }}.d"
+    state: absent
+  become: "{{ sb_become }}"
