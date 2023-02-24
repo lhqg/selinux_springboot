@@ -1,0 +1,33 @@
+---
+
+- name: "Check for mandatory variables"
+  fail:
+    msg: "{{ item }} was not defined. Please check the role documentation."
+  when: vars[item] is not defined
+  loop:
+    - sb_user_id
+    - sb_group_id
+    - sb_dedicated_lv_opt
+    - sb_dedicated_lv_srv
+    - sb_dedicated_lv_log
+
+- name: "Check for LVM consistency on /opt/springboot LV/FS"
+  fail:
+    msg: "sb_dedicated_vg_opt must be defined when sb_dedicated_lv_opt is set to yes."
+  when:
+    - sb_dedicated_lv_opt
+    - sb_dedicated_vg_opt is not defined
+
+- name: "Check for LVM consistency on /srv/springboot LV/FS"
+  fail:
+    msg: "sb_dedicated_vg_srv must be defined when sb_dedicated_lv_srv is set to yes."
+  when:
+    - sb_dedicated_lv_srv
+    - sb_dedicated_vg_srv is not defined
+
+- name: "Check for LVM consistency on /var/log/springboot LV/FS"
+  fail:
+    msg: "sb_dedicated_vg_log must be defined when sb_dedicated_lv_log is set to yes."
+  when:
+    - sb_dedicated_lv_log
+    - sb_dedicated_vg_log is not defined

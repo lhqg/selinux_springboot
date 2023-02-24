@@ -70,11 +70,18 @@ then
 		exit 127
 	fi
 
+	if [ -z "${JVM_MEM_OPTS}" ]
+	then
+		echo "FATAL: JVM_MEM_OPTS is not set."
+		exit 127
+	fi
+
 	if [ -z "${JAVA_SECURITY_FILE}" ]
 	then
 		echo "FATAL: JAVA_SECURITY_FILE is not set."
 		exit 127
 	fi
+
 
 	#
 	# Declare functions
@@ -122,8 +129,18 @@ then
 			return 2
 		fi
 
+		if echo "${JVM_MEM_OPTS}" | egrep -q '&|;|>|<' ; then
+			echo "The JVM_MEM_OPTS variable contains forbidden characters. Precheck failed."
+			return 3
+		fi
+
 		if echo "${JAVA_EXTRA_ARGS}" | egrep -q '&|;|>|<' ; then
 			echo "The JAVA_EXTRA_ARGS variable contains forbidden characters. Precheck failed."
+			return 3
+		fi
+
+		if echo "${JAR_OPTS}" | egrep -q '&|;|>|<' ; then
+			echo "The JAR_OPTS variable contains forbidden characters. Precheck failed."
 			return 3
 		fi
 
@@ -180,13 +197,14 @@ then
 
 			trap "" SIGHUP
 			$JAVA_HOME/bin/java -DAPP_NAME="${APP_NAME}" \
+				${JVM_MEM_OPTS} \
 				-Dloader.path="${LOADER_PATH}" \
 				-DLOG_PATH="${LOG_PATH}" \
 				-Djava.io.tmpdir=${JAVA_TMPDIR} \
 				-Djava.security.properties=${JAVA_SECURITY_FILE} \
 				${SPRING_CONFIG_OPT} \
 				${JAVA_EXTRA_ARGS} \
-				-jar "${APP_JAR_FILEPATH}" &
+				-jar "${APP_JAR_FILEPATH}" ${JAR_OPTS} &
 
 			jobpid=$!
 			sleep 1

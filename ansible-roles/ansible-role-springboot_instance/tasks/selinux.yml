@@ -1,0 +1,22 @@
+---
+
+- name : "Restore SELinux fcontexts for {{ sb_appname }}"
+  shell: >
+        /bin/bash -c "/sbin/restorecon -RFi {{ sb_appbase }} {{ sb_log_dir }} {{ sb_srv_dir }}"
+  become: "{{ sb_become }}"
+
+- name: "Add SELinux type to listen port {{ sb_listen_port }}"
+  seport:
+    ports: "{{ sb_listen_port }}"
+    proto: tcp
+    setype: springboot_port_t
+    state: present
+  become: "{{ sb_become }}"
+
+- name: "Switch SELinux boolean to allow Springboot application to create and map/execute dynamic libraries"
+  seboolean:
+    name: allow_springboot_dynamic_libs
+    state: yes
+    persistent: yes
+  become: "{{ sb_become }}"
+  when: sb_enable_dynlibs is defined and sb_enable_dynlibs

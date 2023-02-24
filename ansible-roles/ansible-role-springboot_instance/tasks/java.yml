@@ -1,0 +1,15 @@
+- name: "Install java"
+  package:
+    name: java-{{ sb_java_version }}-{{ sb_java_flavour }}-headless.x86_64
+    state: present
+  become: "{{ sb_become }}"
+  when: sb_java_flavour != "oracle" and sb_java_version > 8
+
+- name: "Create symlink to Java home"
+  ansible.builtin.file:
+    state: link
+    dest: "{{ sb_appbase }}/java_home"
+    src: "/etc/alternatives/jre_{{ sb_java_version }}_{{ sb_java_flavour }}"
+  become: "{{ sb_become }}"
+  when: sb_java_flavour != "oracle" and sb_java_version > 8
+

@@ -1,0 +1,32 @@
+---
+# Register a new Springboot service for RHEL 7/8
+- name: "Install Springboot service environment file"
+  template:
+    src: service-env.j2
+    dest: "{{ sb_service_env_filename }}"
+    owner: springboot
+    group: springboot
+    mode: 0400
+    seuser: system_u
+    serole: object_r
+    setype: springboot_conf_t
+  become: "{{ sb_become }}"
+
+- name: "Create overrides directory for Springboot service instance"
+  file:
+    path: "/etc/systemd/system/springboot@{{ sb_appname }}.d"
+    state: directory
+    owner: root
+    group: root
+    mode: 0555
+    seuser: system_u
+    serole: object_r
+    setype: springboot_unit_file_t
+  become: "{{ sb_become }}"
+
+- name: "Make {{ sb_appname }} start at boot and reload daemon"
+  systemd:
+    name: "{{ sb_service_name }}"
+    enabled: "{{ sb_start_at_boot }}"
+    daemon_reload: yes
+  become: "{{ sb_become }}"

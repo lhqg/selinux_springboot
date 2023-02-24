@@ -1,0 +1,55 @@
+---
+
+- name: Create Springboot APPs root
+  file:
+    path: /opt/springboot
+    state: directory
+    mode: 0550
+    owner: root
+    group: springboot
+    seuser: system_u
+    serole: object_r
+    setype: usr_t
+  become: "{{ sb_become }}"
+
+- name: Create Springboot LOGs root
+  file:
+    path: /var/log/springboot
+    state: directory
+    mode: 0550
+    owner: root
+    group: springboot
+    seuser: system_u
+    serole: object_r
+    setype: springboot_log_t
+  become: "{{ sb_become }}"
+
+- name: Create Springboot TMP/cache/work root
+  file:
+    path: /srv/springboot
+    state: directory
+    mode: 0550
+    owner: root
+    group: springboot
+    seuser: system_u
+    serole: object_r
+    setype: springboot_var_t
+  become: "{{ sb_become }}"
+
+- name: Create Springboot APPs common bin directory
+  file:
+    path: "/opt/springboot/bin"
+    state: directory
+    mode: 0555
+    owner: root
+    group: springboot
+    seuser: system_u
+    serole: object_r
+    setype: springboot_bin_t
+  become: "{{ sb_become }}"
+
+- name : "Restore SELinux fcontexts for Springboot roots (/opt/springboot /var/log/springboot)"
+  shell: >
+        /sbin/restorecon -RFi /opt/springboot /var/log/springboot /var/lib/springboot /var/tmp/springboot /srv/springboot
+  become: "{{ sb_become }}"
+
