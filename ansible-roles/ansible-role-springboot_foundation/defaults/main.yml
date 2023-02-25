@@ -1,9 +1,0 @@
----
-# Definition of defaults file for ansible-role-springboot_foundation
-
-sb_become: yes
-
-sb_user_id: 5000
-sb_group_id: 5000
-
-sb_systemd_target_enabled: yes
