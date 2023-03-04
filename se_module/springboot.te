@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.1.1)
+policy_module(springboot, 1.2.0)
 
 ########################################
 #
@@ -428,3 +428,15 @@ if	(allow_webadm_read_springboot_files)	{
 	allow	webadm_t	springboot_tmp_t:file	read_file_perms;
 }
 
+#
+##	Permissions for log admins (logadm_t)
+#
+
+allow	logadm_t	springboot_file_type:dir					search_dir_perms;
+allow	logadm_t	springboot_file_type:notdevfile_class_set	getattr;
+allow	logadm_t	springboot_file_type:lnk_file				read_lnk_file_perms;
+
+allow	logadm_t	springboot_log_t:dir		{ list_dir_perms del_entry_dir_perms delete_dir_perms create_dir_perms reparent };
+allow	logadm_t	springboot_log_t:file		{ delete_file_perms rename_file_perms };
+
+filetrans_add_pattern(logadm_t,	springboot_log_t, springboot_log_t, dir)
