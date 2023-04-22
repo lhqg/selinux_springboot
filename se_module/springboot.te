@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.2.0)
+policy_module(springboot, 1.3.0)
 
 ########################################
 #
@@ -129,6 +129,18 @@ gen_require(`
 	type	redis_port_t;
 	type	couchdb_port_t;
 	type	mongod_port_t;
+
+	type	httpd_t;
+	type	postfix_smtpd_t;
+	type	qmail_smtpd_t;
+	type	sendmail_t;
+	type	slapd_t;
+	type	dirsrv_t;
+	type	mysqld_t;
+	type	postgresql_t;
+	type	redis_t;
+	type	couchdb_t;
+	type	mongod_t;
 
 
 	type	node_t;
@@ -260,6 +272,7 @@ corenet_tcp_connect_ocsp_port(springboot_t)
 
 if (allow_springboot_connectto_http) {
 	allow	springboot_t	http_port_t:tcp_socket		name_connect;
+	allow	springboot_t	httpd_t:peer				recv;
 }
 
 if (allow_springboot_connectto_self) {
@@ -268,10 +281,15 @@ if (allow_springboot_connectto_self) {
 
 if (allow_springboot_connectto_ldap) {
 	allow	springboot_t	ldap_port_t:tcp_socket	name_connect;
+	allow	springboot_t	slapd_t:peer			recv;
+	allow	springboot_t	dirsrv_t:peer			recv;
 }
 
 if (allow_springboot_connectto_smtp) {
 	allow	springboot_t	smtp_port_t:tcp_socket	name_connect;
+	allow	springboot_t	postfix_smtpd_t:peer			recv;
+	allow	springboot_t	qmail_smtpd_t:peer				recv;
+	allow	springboot_t	sendmail_t:peer					recv;
 }
 
 
@@ -281,22 +299,27 @@ if (allow_springboot_connectto_oracle) {
 
 if (allow_springboot_connectto_mysql) {
 	allow	springboot_t	mysqld_port_t:tcp_socket	name_connect;	
+	allow	springboot_t	mysqld_t:peer				recv;
 }
 
 if (allow_springboot_connectto_pgsql) {
 	allow	springboot_t	postgresql_port_t:tcp_socket	name_connect;
+	allow	springboot_t	postgresql_t:peer				recv;
 }
 
 if (allow_springboot_connectto_redis) {
 	allow	springboot_t	redis_port_t:tcp_socket	name_connect;
+	allow	springboot_t	redis_t:peer			recv;
 }
 
 if (allow_springboot_connectto_couchdb) {
 	allow	springboot_t	couchdb_port_t:tcp_socket	name_connect;
+	allow	springboot_t	couchdb_t:peer				recv;
 }
 
 if (allow_springboot_connectto_mongodb) {
 	allow	springboot_t	mongod_port_t:tcp_socket	name_connect;
+	allow	springboot_t	mongod_t:peer				recv;
 }
 
 
