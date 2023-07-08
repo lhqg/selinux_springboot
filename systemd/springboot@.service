@@ -4,6 +4,9 @@ Description=Springboot Server - %I
 Requires=network-online.target time-sync.target
 After=network-online.target time-sync.target basic.target
 
+Conflicts=springboot-shutdown.target
+DefaultDependencies=yes
+
 [Service]
 Type=forking
 
