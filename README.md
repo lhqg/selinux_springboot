@@ -14,7 +14,7 @@
     * [SELinux booleans](#selinux-booleans)
     * [Interfaces for deployment tools](#interfaces-for-deployment-tools)
     * [Starting the Springboot application](#starting-the-springboot-application)
-3. [Running multiple Springboot appplications on the same host](#running-multiple-springboot-appplications-on-the-same-host)
+3. [Running multiple Springboot applications on the same host](#running-multiple-springboot-applications-on-the-same-host)
 4. [Related projects](#related-projects)
 5. [Disclaimer](#disclaimer)
 
@@ -142,7 +142,7 @@ LDAP/LDAPS ports (locally assigned the `ldap_port_t` SELinux type).
 When switch to `true`this boolean allows the Springboot application to connect to remote
 SMTP/SMTPS/submission ports (locally assigned the `smtp_port_t` SELinux type).
 
-#### Mutiple booleans allow_springboot_connectto_<DB>      (default: `false`)
+#### Mutiple booleans allow_springboot_connectto_\<DB\>      (default: `false`)
 
 When switch to `true`these boolean allows the Springboot application to connect to remote
 database server ports: `couchdb`, `mongodb`, `mysql` (MariaDB), `oracle`, `pgsql` (PostgreSQL), `redis`.
@@ -262,7 +262,7 @@ The script(s) used to start or stop the Springboot application MUST be located i
 /opt/springboot/service/ directory. The /opt/springboot/bin/springboot_service file name
 is also supported.
 
-### Running multiple Springboot appplications on the same host
+### Running multiple Springboot applications on the same host
 
 TO DO
 

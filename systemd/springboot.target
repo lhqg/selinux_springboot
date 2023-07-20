@@ -4,7 +4,7 @@ Description=Springboot target with all Springboot application services
 Requires=network-online.target time-sync.target
 After=network-online.target time-sync.target basic.target
 
-Conflicts=shutdown.target
+Conflicts=shutdown.target springboot-shutdown.target
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Shutdown target for all Springboot application services
+
+Before=shutdown.target
+
+Conflicts=springboot.target
+DefaultDependencies=no
+
+[Install]
+WantedBy=shutdown.target
