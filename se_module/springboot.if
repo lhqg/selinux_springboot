@@ -215,7 +215,7 @@ interface(`springboot_systemd_deployer',`
 	allow	$1_t	springboot_unit_file_t:lnk_file	manage_lnk_file_perms
 
 	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	{ file lnk_file },	"springboot.service" )
-	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	{ file lnk_file},	"springboot.target" )
+	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	{ file lnk_file },	"springboot.target" )
 	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir,				"springboot.service.d" )
 	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir,				"springboot.target.d" )
 	filetrans_add_pattern($1_t,	systemd_unit_file_t,	springboot_unit_file_t,	dir,				"springboot.target.wants" )
