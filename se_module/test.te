@@ -9,7 +9,7 @@ type springboot_test5_t;
 springboot_monitor(springboot_test1)
 springboot_deployer(springboot_test2)
 springboot_systemd_deployer(springboot_test3)
-springboot_systemd_unit_instance_deployer(springboot_test4)
+springboot_systemd_unit_instance_deployer(springboot_test4, dummy_instance)
 springboot_auth_deployer(springboot_test5)
 
 springboot_allow_connectto(http)
