@@ -1,0 +1,16 @@
+policy_module(test, 0.0.1)
+
+type springboot_test1_t;
+type springboot_test2_t;
+type springboot_test3_t;
+type springboot_test4_t;
+type springboot_test5_t;
+
+springboot_monitor(springboot_test1)
+springboot_deployer(springboot_test2)
+springboot_systemd_deployer(springboot_test3)
+springboot_systemd_unit_instance_deployer(springboot_test4, dummy_instance)
+springboot_auth_deployer(springboot_test5)
+
+springboot_allow_connectto(http)
+springboot_allow_consumed_service(ldap)
