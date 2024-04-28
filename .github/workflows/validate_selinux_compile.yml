@@ -77,10 +77,25 @@ jobs:
       - uses: actions/checkout@v3
       - uses: hubertqc/selinux_compile@fedora38
 
+  compile_fedora39:
+    name: Validate SELinux code (Fedora 39)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@fedora39
+
+  compile_fedora40:
+    name: Validate SELinux code (Fedora 40)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hubertqc/selinux_compile@fedora40
 
   semodule_info:
     name: Get SELinux module informations
-    needs: [ compile_centos7, compile_centos8, compile_centos9, compile_fedora36, compile_fedora37, compile_fedora38 ]
+    needs: [ compile_centos7, compile_centos8, compile_centos9, compile_fedora36, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40 ]
       
     runs-on: ubuntu-latest
     
