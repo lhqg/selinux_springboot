@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@centos7
+      - uses: lhqg/selinux_compile@centos7
 
   compile_centos8:
     name: Validate SELinux code (CentOS 8)
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@centos8
+      - uses: lhqg/selinux_compile@centos8
 
   compile_centos9:
     name: Validate SELinux code (CentOS 9)
@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@centos9
+      - uses: lhqg/selinux_compile@centos9
 
   compile_fedora36:
     name: Validate SELinux code (Fedora 36)
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@fedora36
+      - uses: lhqg/selinux_compile@fedora36
 
   compile_fedora37:
     name: Validate SELinux code (Fedora 37)
@@ -67,7 +67,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@fedora37
+      - uses: lhqg/selinux_compile@fedora37
 
   compile_fedora38:
     name: Validate SELinux code (Fedora 38)
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@fedora38
+      - uses: lhqg/selinux_compile@fedora38
 
   compile_fedora39:
     name: Validate SELinux code (Fedora 39)
@@ -83,7 +83,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@fedora39
+      - uses: lhqg/selinux_compile@fedora39
 
   compile_fedora40:
     name: Validate SELinux code (Fedora 40)
@@ -91,7 +91,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: hubertqc/selinux_compile@fedora40
+      - uses: lhqg/selinux_compile@fedora40
 
   semodule_info:
     name: Get SELinux module informations

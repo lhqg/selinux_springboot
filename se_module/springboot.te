@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.3.1)
+policy_module(springboot, 1.3.2)
 
 ########################################
 #
@@ -114,6 +114,7 @@ bool	allow_springboot_connectto_mongodb	false;
 
 bool	allow_springboot_dynamic_libs				false;
 bool	allow_springboot_purge_logs					false;
+bool	allow_springboot_rewrite_logs				false;
 bool	allow_webadm_read_springboot_files			false;
 bool	allow_sysadm_write_springboot_files			false;
 bool	allow_sysadm_manage_springboot_auth_files	false;
@@ -277,6 +278,7 @@ if (allow_springboot_connectto_http) {
 
 if (allow_springboot_connectto_self) {
 	allow	springboot_t	springboot_port_t:tcp_socket	name_connect;
+	allow	springboot_t	springboot_t:peer				recv;
 }
 
 if (allow_springboot_connectto_ldap) {
@@ -291,7 +293,6 @@ if (allow_springboot_connectto_smtp) {
 	allow	springboot_t	qmail_smtpd_t:peer				recv;
 	allow	springboot_t	sendmail_t:peer					recv;
 }
-
 
 if (allow_springboot_connectto_oracle) {
 	allow	springboot_t	oracle_port_t:tcp_socket	name_connect;
@@ -341,9 +342,9 @@ allow	springboot_t	springboot_bin_t:file						exec_file_perms;
 allow	springboot_t	springboot_lib_t:file						map;
 
 if	(allow_springboot_dynamic_libs)	{
-	allow	springboot_t	springboot_dynlib_t:dir		{ create_dir_perms rw_dir_perms };
-	allow	springboot_t	springboot_dynlib_t:file	manage_file_perms;
-	allow	springboot_t	springboot_dynlib_t:file	exec_file_perms;
+	allow	springboot_t	springboot_dynlib_t:dir			{ create_dir_perms rw_dir_perms };
+	allow	springboot_t	springboot_dynlib_t:file		manage_file_perms;
+	allow	springboot_t	springboot_dynlib_t:file		exec_file_perms;
 	allow	springboot_t	springboot_dynlib_t:lnk_file	manage_lnk_file_perms;
 
 	filetrans_add_pattern(springboot_t,	springboot_dynlib_t,	springboot_dynlib_t,	{ dir file lnk_file } )
@@ -385,21 +386,25 @@ allow	springboot_t	springboot_log_t:file		{ create_file_perms append_file_perms 
 logging_log_filetrans(springboot_t,	springboot_log_t,	{ file	dir }	)
 
 if	(allow_springboot_purge_logs)	{
-	allow	springboot_t	springboot_log_t:dir	rw_dir_perms;
+	allow	springboot_t	springboot_log_t:dir	del_entry_dir_perms;
 	allow	springboot_t	springboot_log_t:file	delete_file_perms;
 }
 
+if	(allow_springboot_rewrite_logs)	{
+	allow	springboot_t	springboot_log_t:file	write_file_perms;
+}
+
+
 dontaudit	springboot_t	domain:dir	getattr;
 dontaudit	springboot_t	domain:file	getattr;
-
 
 #
 ##	Permissions for Sys admins (sysadm_t)
 #
 
-allow	sysadm_t	springboot_file_type:dir			list_dir_perms;
+allow	sysadm_t	springboot_file_type:dir					list_dir_perms;
 allow	sysadm_t	springboot_file_type:notdevfile_class_set	getattr;
-allow	sysadm_t	springboot_file_type:lnk_file			read_lnk_file_perms;
+allow	sysadm_t	springboot_file_type:lnk_file				read_lnk_file_perms;
 
 allow	sysadm_t	springboot_bin_t:file		exec_file_perms;
 
@@ -437,11 +442,11 @@ if	(allow_sysadm_manage_springboot_auth_files)	{
 ##	Permissions for Web admins (webadm_t)
 #
 
-allow	webadm_t	springboot_file_type:dir			list_dir_perms;
+allow	webadm_t	springboot_file_type:dir					list_dir_perms;
 allow	webadm_t	springboot_file_type:notdevfile_class_set	getattr;
-allow	webadm_t	springboot_file_type:lnk_file			read_lnk_file_perms;
+allow	webadm_t	springboot_file_type:lnk_file				read_lnk_file_perms;
 
-allow	webadm_t	springboot_unit_file_t:file	read_file_perms;
+allow	webadm_t	springboot_unit_file_t:file		read_file_perms;
 allow	webadm_t	springboot_unit_file_t:service	{ stop start status };
 
 if	(allow_webadm_read_springboot_files)	{

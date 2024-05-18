@@ -1,3 +1,11 @@
+![GitHub Release (latest SemVer)](https://img.shields.io/github/v/release/hubertqc/selinux_springboot)
+[![License](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+[![GitHub Issues](https://img.shields.io/github/issues/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/issues)
+[![GitHub PR](https://img.shields.io/github/issues-pr/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/pulls)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
+[![GitHub Last commit](https://img.shields.io/github/last-commit/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
+![GitHub Downloads](https://img.shields.io/github/downloads/hubertqc/selinux_springboot/total)
+
 # SELinux policy module for Springboot applications
 
 <https://github.com/hubertqc/selinux_springboot>
@@ -156,13 +164,19 @@ Springboot application to offload arbitrary code and use it.
 
 #### allow_springboot_purge_logs  (default: `false`)
 
-When switched to `true`n, this boolean allows the Springboot application to delete its log
-files. It can be useful for log file rotation, but it can also be useful for attackers who
-would like to clean after themselves and remove traces of their actions...
+When switched to `true`, this boolean allows the Springboot application to delete its log
+files. It can be useful for "in Java app" logging framework initiated log file rotation.
+But it can also be useful for attackers who would like to clean after themselves and remove traces of their actions...
+
+#### allow_springboot_rewrite_logs  (default: `false`)
+
+When switched to `true`, this boolean allows the Springboot application to rewrite its own
+log files. It can prove useful when the logging framework cannot work in "append only" mode".
+But it can also be useful for attackers who would like to clean after themselves and remove traces of their actions...
 
 #### allow_webadm_read_springboot_files  (default: `false`)
 
-Users running with the `webadm_r`SELinux role and`webadm_t`domain are granted the
+Users running with the `webadm_r` SELinux role and`webadm_t` domain are granted the
 permissions to browse the directories of the Springboot application and the permission to
 stop and start the Springboot application **systemd** services, as well as querying their
 status.
@@ -263,6 +277,13 @@ The script(s) used to start or stop the Springboot application MUST be located i
 is also supported.
 
 ### Running multiple Springboot applications on the same host
+
+#### Without isolation
+
+Nothing special needs to be done.
+Care must be taken to name each Springboot apps properly and to properly use systemd/systemctl to manage each one.
+
+#### With isolation between the Springboot apps
 
 TO DO
 
