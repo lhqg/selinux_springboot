@@ -156,13 +156,19 @@ Springboot application to offload arbitrary code and use it.
 
 #### allow_springboot_purge_logs  (default: `false`)
 
-When switched to `true`n, this boolean allows the Springboot application to delete its log
-files. It can be useful for log file rotation, but it can also be useful for attackers who
-would like to clean after themselves and remove traces of their actions...
+When switched to `true`, this boolean allows the Springboot application to delete its log
+files. It can be useful for "in Java app" logging framework initiated log file rotation.
+But it can also be useful for attackers who would like to clean after themselves and remove traces of their actions...
+
+#### allow_springboot_rewrite_logs  (default: `false`)
+
+When switched to `true`, this boolean allows the Springboot application to rewrite its own
+log files. It can prove useful when the logging framework cannot work in "append only" mode".
+But it can also be useful for attackers who would like to clean after themselves and remove traces of their actions...
 
 #### allow_webadm_read_springboot_files  (default: `false`)
 
-Users running with the `webadm_r`SELinux role and`webadm_t`domain are granted the
+Users running with the `webadm_r` SELinux role and`webadm_t` domain are granted the
 permissions to browse the directories of the Springboot application and the permission to
 stop and start the Springboot application **systemd** services, as well as querying their
 status.
@@ -263,6 +269,13 @@ The script(s) used to start or stop the Springboot application MUST be located i
 is also supported.
 
 ### Running multiple Springboot applications on the same host
+
+#### Without isolation
+
+Nothing special needs to be done.
+Care must be taken to name each Springboot apps properly and to properly use systemd/systemctl to manage each one.
+
+#### With isolation between the Springboot apps
 
 TO DO
 

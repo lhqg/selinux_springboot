@@ -386,7 +386,7 @@ allow	springboot_t	springboot_log_t:file		{ create_file_perms append_file_perms 
 logging_log_filetrans(springboot_t,	springboot_log_t,	{ file	dir }	)
 
 if	(allow_springboot_purge_logs)	{
-	allow	springboot_t	springboot_log_t:dir	del_entry_dir_perms_dir_perms;
+	allow	springboot_t	springboot_log_t:dir	del_entry_dir_perms;
 	allow	springboot_t	springboot_log_t:file	delete_file_perms;
 }
 
