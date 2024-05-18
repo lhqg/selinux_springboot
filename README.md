@@ -1,8 +1,10 @@
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/hubertqc/selinux_springboot)
+![GitHub Release (latest SemVer)](https://img.shields.io/github/v/release/hubertqc/selinux_springboot)
 [![License](https://img.shields.io/badge/License-GPL%202--Clause-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
-[![GitHub issues](https://img.shields.io/github/issues/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/issues)
+[![GitHub PR](https://img.shields.io/github/issues-pr/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/pulls)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
-[![GitHub last commit](https://img.shields.io/github/last-commit/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
+[![GitHub Last commit](https://img.shields.io/github/last-commit/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
+[![GitHub Downloads](https://img.shields.io/github/downloads/hubertqc/selinux_springboot/total)]
 
 # SELinux policy module for Springboot applications
 
