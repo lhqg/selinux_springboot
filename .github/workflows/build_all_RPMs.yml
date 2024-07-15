@@ -46,7 +46,10 @@ jobs:
   build_RPMs:
     name: Build RPMs and upload them to release
     needs: get_release_info
-    uses: Laurent-Gaillard/selinux_build_modules/.github/workflows/generic_semodule_build.yml@main
+    uses: lhqg/build_selinux_rpm/.github/workflows/generic_semodule_build.yml@main
+    secrets:
+      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
     with:
       spec_file_location: rpm/
       selinux_files_location: se_module/

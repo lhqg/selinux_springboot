@@ -1,14 +1,14 @@
-![GitHub Release (latest SemVer)](https://img.shields.io/github/v/release/hubertqc/selinux_springboot)
+![GitHub Release (latest SemVer)](https://img.shields.io/github/v/release/lhqg/selinux_springboot)
 [![License](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
-[![GitHub Issues](https://img.shields.io/github/issues/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/issues)
-[![GitHub PR](https://img.shields.io/github/issues-pr/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/pulls)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
-[![GitHub Last commit](https://img.shields.io/github/last-commit/hubertqc/selinux_springboot)](https://github.com/hubertqc/selinux_springboot/commits/main)
-![GitHub Downloads](https://img.shields.io/github/downloads/hubertqc/selinux_springboot/total)
+[![GitHub Issues](https://img.shields.io/github/issues/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/issues)
+[![GitHub PR](https://img.shields.io/github/issues-pr/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/pulls)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/commits/main)
+[![GitHub Last commit](https://img.shields.io/github/last-commit/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/commits/main)
+![GitHub Downloads](https://img.shields.io/github/downloads/lhqg/selinux_springboot/total)
 
 # SELinux policy module for Springboot applications
 
-<https://github.com/hubertqc/selinux_springboot>
+<https://github.com/lhqg/selinux_springboot>
 
 ## Table of Contents
 
@@ -291,9 +291,9 @@ TO DO
 
 While having a look at this SELinux policy module for Springboot application, you should probably take a glance at:
 
-* A Puppet module module to deploy Springboot applications: <https://github.com/hubertqc/puppet-springboot>
-* Ansible roles to deloy Springboot applications: <https://github.com/hubertqc/ansible-springboot>
-* A SElinux policy module for batches running using Springboot: <https://github.com/hubertqc/selinux_springbatch>
+* A Puppet module module to deploy Springboot applications: <https://github.com/lhqg/puppet-springboot>
+* Ansible roles to deloy Springboot applications: <https://github.com/lhqg/ansible-springboot>
+* A SElinux policy module for batches running using Springboot: <https://github.com/lhqg/selinux_springbatch>
 
 ## Disclaimer
 

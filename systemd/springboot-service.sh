@@ -1,6 +1,7 @@
 #!/bin/bash
 #################################################################
 # Springboot application control script.
+#	https://github.com/lhqg/selinux_springboot
 #
 # This is called by systemmd to start the application at boot time
 #
