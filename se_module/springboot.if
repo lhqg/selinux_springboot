@@ -2,15 +2,15 @@
 #
 #	Springboot SELinux policymodule
 #
-#	https://github.com/hubertqc/selinux_springboot
+#	https://github.com/lhqg/selinux_springboot
 #
 #
-# Copyright (c) 2022 H. Quarantel-Colombani <hubert@quarantel.name>
+# Copyright (c) 2022 LHQG, H. Quarantel-Colombani <hubert@quarantel.name>
 # Author: Hubert Quarantel-Colombani <hubert@quarantel.name>
 #
 #
 # This program is free software: you can redistribute it and/or modify
-# it under the terms of version 2 of the GNU General Public License as
+# it under the terms of version 3 3f the GNU General Public License as
 # published by the Free Software Foundation.
 #
 # This program is distributed in the hope that it will be useful,

@@ -28,38 +28,22 @@ env:
 
 jobs:
 
-  compile_centos7:
-    name: Validate SELinux code (CentOS 7)
+  compile_el8:
+    name: Validate SELinux code (EL 8)
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - uses: lhqg/selinux_compile@centos7
+      - uses: lhqg/selinux_compile@almalinux8
 
-  compile_centos8:
-    name: Validate SELinux code (CentOS 8)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: lhqg/selinux_compile@centos8
-
-  compile_centos9:
-    name: Validate SELinux code (CentOS 9)
+  compile_el9:
+    name: Validate SELinux code (EL 9)
     runs-on: ubuntu-latest
     continue-on-error: true
 
     steps:
       - uses: actions/checkout@v3
       - uses: lhqg/selinux_compile@centos9
-
-  compile_fedora36:
-    name: Validate SELinux code (Fedora 36)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: lhqg/selinux_compile@fedora36
 
   compile_fedora37:
     name: Validate SELinux code (Fedora 37)
@@ -95,7 +79,7 @@ jobs:
 
   semodule_info:
     name: Get SELinux module informations
-    needs: [ compile_centos7, compile_centos8, compile_centos9, compile_fedora36, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40 ]
+    needs: [ compile_el8, compile_el9, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40 ]
       
     runs-on: ubuntu-latest
     

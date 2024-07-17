@@ -2,8 +2,9 @@ Name:		springboot-selinux-devel
 Version:	%{_provided_version}
 Release:	%{_provided_release}%{?dist}
 Summary:	SELinux policy module for Springboot applications - devel
-License:	GPLv2
-URL:		https://github.com/hubertqc/selinux_springboot
+Vendor:   LHQG, https://www.lhqg.fr/
+License:	GPLv3
+URL:		https://github.com/lhqg/selinux_springboot
 #Source:	%{name}-%{version}.tar.gz
 BuildArch:	noarch
 

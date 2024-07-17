@@ -1,7 +1,7 @@
 The Springboot SELinux policy module Security Vulnerability Handling Process
 =============================================================================
 
-<https://github.com/hubertqc/selinux_springboot>
+<https://github.com/lhqg/selinux_springboot>
 
 This document attempts to describe the processes through which sensitive
 security relevant bugs can be responsibly disclosed to the Springboot SELinux

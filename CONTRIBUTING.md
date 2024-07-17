@@ -1,7 +1,7 @@
 How to Submit Patches to the SELinux Springboot Project
 ===============================================================================
 
-<https://github.com/hubertqc/selinux_springboot>
+<https://github.com/lhqg/selinux_springboot>
 
 This document is intended to act as a guide to help you contribute to the
 SELinux Springboot project.
