@@ -1,5 +1,5 @@
 ![GitHub Release (latest SemVer)](https://img.shields.io/github/v/release/lhqg/selinux_springboot)
-[![License](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![GitHub Issues](https://img.shields.io/github/issues/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/issues)
 [![GitHub PR](https://img.shields.io/github/issues-pr/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/pulls)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/commits/main)
