@@ -6,7 +6,7 @@
 #	Restore fcontext script:							#
 #		This script restores SELinux fcontexts.			#
 #														#
-#    https://github.com/hubertqc/selinux_springboot		#
+#    https://github.com/lhqg/selinux_springboot		#
 #														#
 #########################################################
 
