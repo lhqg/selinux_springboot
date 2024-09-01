@@ -1,0 +1,294 @@
+'\" t
+.TH springboot_selinux 8 "Springboot SELinux policy man page"
+.LO 8
+
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+
+.SH Name
+springboot_selinux \- Security Enhanced Linux Policy for Java Spring Boot services
+
+.SH Description
+.PP
+Security-Enhanced Linux (SELinux) secures the Java Springboot processes via flexible
+mandatory access control (MAC).
+.PP
+The Springboot application/service processes execute with the \fIspringboot_t\fR SELinux
+type (domain).
+.PP
+You can check if you have these processes running by executing the \fBps\fR
+command with the \fB\-Z\fR qualifier.
+.PP
+For example:
+.RS 2
+\fBps \-eZ | grep springboot_t\fR
+.RE
+
+.SH Entrypoints
+.PP
+The springboot_t SELinux type/domain can be entered via the \fIspringboot_exec_t\fR file type.
+.br
+The default entrypoint paths for the springboot_t domain are the following:
+/opt/springboot/bin/springboot_service, /opt/springboot/bin/springboot_service.sh and /opt/springboot/service/*
+.RE
+
+.SH Process types
+.PP
+SELinux defines process types (domains) for each process running on the system.
+Policy governs the access confined processes have to files/directories and all other types
+of resources on the system (network ports, other processes...). 
+.PP
+The springboot_t process type (domain) is defined for Springboot application/service processes.
+.PP
+Note: \fBsemanage permissive \-a springboot_t\fR
+.RS 2
+Can be used to make the process type springboot_t permissive.
+.br
+Permissive process types are not denied access by SELinux. AVC messages will still be generated.
+.RE
+
+.SH Booleans
+.PP
+The SELinux policy rules for the springboot_t domain can be tuned using predefined booleans to allow/disallow
+the Springboot application different actions.
+.PP
+\fBallow_springboot_connectto_http\fR (true)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to HTTP ports (labeled as http_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_self\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to other Springboot applications ports (labeled as springboot_port_t).
+.RE
+.PP
+\fBallow_springboot_syslog_netsend\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) and send (UDP) to syslog ports (labeled as syslogd_port_t or syslog_tls_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_ldap\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to LDAP ports (labeled as ldap_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_smtp\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to SMTP ports (labeled as smtp_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_oracle\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to Oracle ports (labeled as oracle_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_mysql\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to MySQL/MariaDB ports (labeled as mysqlde_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_pgsql\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to PostgreSQL ports (labeled as postgresql_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_redis\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to Redis ports (labeled as redis_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_couchdb\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to CouchDB ports (labeled as couch_port_t).
+.RE
+.PP
+\fBallow_springboot_connectto_mongodb\fR (false)
+.RS 4
+Whether to allow the Springboot application to connect (TCP) to MongoDB ports (labeled as mongod_port_t).
+.RE
+.PP
+\fBallow_springboot_dynamic_libs\fR (false)
+.RS 4
+Whether to allow the Springboot application to create and use (execute/map) dynamic libraries.
+.RE
+.PP
+\fBallow_springboot_purge_logs\fR (false)
+.RS 4
+Whether to allow the Springboot application to delete its log files.
+.RE
+.PP
+\fBallow_springboot_rewrite_logs\fR (false)
+.RS 4
+Whether to allow the Springboot application to rewrite/modify its log files.
+.RE
+.PP
+\fBallow_webadm_read_springboot_files\fR (false)
+.RS 4
+Whether to allow users processes running in the \fIwebadm_t\fR SELinux domain to read Springboot application files.
+.RE
+.PP
+\fBallow_sysadm_write_springboot_files\fR (false)
+.RS 4
+Whether to allow users processes running in the \fIsysadm_t\fR SELinux domain to modify/alter Springboot application files.
+.RE
+.PP
+\fBallow_sysadm_manage_springboot_auth_files\fR (false)
+.RS 4
+Whether to allow users processes running in the \fIsysadm_t\fR SELinux domain to modify/alter Springboot application authentication/sensitive files.
+.RE
+.PP
+.RE
+
+.SH File Contexts
+.PP
+\fBspringboot_conf_t\fR
+.RS 4
+Files containing (not highly sensitive) configuration properties and information.
+(Cannot be altered by the Springboot application)
+.RE
+.PP
+\fBspringboot_auth_t\fR
+.RS 4
+Files containing sensitive/confidential configuration properties and authentication information.
+(Cannot be altered by the Springboot application)
+.RE
+.PP
+\fBspringboot_log_t\fR
+.RS 4
+Application log files, may contain sensitive information.
+(Append-only access by the Springboot application, by default)
+.RE
+.PP
+\fBspringboot_var_t\fR
+.RS 4
+Application (various) data files, persistent across application restart and system reboot.
+.RE
+.PP
+\fBspringboot_run_t\fR
+.RS 4
+Application (various) data transient/volative files, not persistent across application restart and system reboot.
+.RE
+.PP
+\fBspringboot_tmp_t\fR
+.RS 4
+Application temporary files.
+.RE
+.PP
+\fBspringboot_bin_t\fR
+.RS 4
+Application binary/executables files.
+(Cannot be altered by the Springboot application)
+.RE
+.PP
+\fBspringboot_lib_t\fR
+.RS 4
+Application libraries files, such as JAR files or .SO files in case os native call/interface.
+(Cannot be altered by the Springboot application)
+.RE
+.PP
+\fBspringboot_dynlib_t\fR
+.RS 4
+Application dynamic libraries files. May be deployed/created/rewritten by the Springboot application itself.
+.RE
+.PP
+\fBspringboot_unit_file_t\fR
+.RS 4
+systemd unit files to control/manage the Springboot application services and targets.
+(Cannot be altered by the Springboot application)
+.RE
+.PP
+.RE
+
+.SH Port Types
+.PP
+\fBspringboot_port_t\fR
+.RS 4
+TCP port the Springboot application binds to and listens on for client connections.
+.RE
+.PP
+\fBspringboot_monitoring_port_t\fR
+.RS 4
+TCP port the Springboot application binds to and listens on for monitoring purposes.
+.RE
+.PP
+.RE
+
+.SH Interfaces
+.PP
+The Springboot SELinux policy is shipped with a set of "interfaces" to easily extend the policy.
+.br
+To use an given interface a small SELinux policy module source code must be created, compiled and finally loaded.
+.SS "Deployment interfaces"
+.PP
+.PP
+\fBspringboot_deployer(\fRdeployer_t\fB)\fR
+.RS 4
+Allows the SELinux domain/type deployer_t passed as its argument to deploy Springboot application files and to manage (stop/start/enable/disable) Springboot systemd units.
+.RE
+.PP
+\fBspringboot_systemd_unit_instance_deployer(\fRdeployer_t\fB)\fR
+.RS 4
+Allows the SELinux domain/type deployer_t passed as its argument to deploy Springboot systemd unit files.
+.RE
+.PP
+\fBspringboot_auth_deployer(\fRdeployer_t\fB)\fR
+.RS 4
+Allows the SELinux domain/type deployer_t passed as its argument to deploy Springboot sensitive configuration files.
+.RE
+.PP
+.RS 2
+\fBExample:\fR SELinux source code to allow Ansible (ansible_t) to deploy the Springboot application
+.RS 2
+policy_module(springboot_ansible_deployment, 1.0.0)
+.br
+springboot_deployer(ansible_t)
+.br
+springboot_auth_deployer(ansible_t)
+.RE
+.PP
+.SS "Other interfaces"
+\fBspringboot_monitor(\fRmonitor_t\fB)\R
+.RS 4
+Allows the SELinux domain/type monitor_t passed as its argument to connect (TCP) to the Springboot application's moniroting port.
+.PP
+.RS 2
+\fBExample:\fR SELinux source code to allow Nagios NRPE to use TCP monitoring of Springboot application
+.RS 2
+policy_module(springboot_nrpe_monitor, 1.0.0)
+.br
+springboot_monitor(nrpe_t)
+.RE
+.RE
+.PP
+
+.SH Author
+.PP
+The Springboot SELinux policy was initially authored by Hubert Quarantel-Colombani and is now published and maintained by LHQG <https://lhqg.fr/>
+.RE
+
+.SH "See Also"
+.PP
+\fBselinux\fR(8),
+\fBsemanage\fR(8),
+\fBrestorecon\fR(8),
+\fBsepolicy\fR(8),
+\fBsetsebool\fR(8)
+.PP
+LHQG GitHub repository <https://github.com/lhqg/selinux_springboot/>

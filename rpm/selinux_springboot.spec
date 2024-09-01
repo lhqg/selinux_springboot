@@ -43,12 +43,14 @@ make -f /usr/share/selinux/devel/Makefile -C %{_builddir} springboot.pp
 %install
 
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/packages/targeted
+mkdir -p -m 0755 %{buildroot}/usr/share/man/man8
 mkdir -p -m 0755 %{buildroot}/%{_docdir}/%{name}
 mkdir -p -m 0755 %{buildroot}/%{_datarootdir}/%{name}
 
 install -m 0555 %{_builddir}/scripts/* %{buildroot}/%{_datarootdir}/%{name}/
 install -m 0444 %{_builddir}/springboot.pp %{buildroot}/usr/share/selinux/packages/targeted/
 install -m 0444 %{_builddir}/{LICENSE,README.md} %{buildroot}/%{_docdir}/%{name}/
+install -m 0444 %{_builddir}/manpages/man8/*.8 %{buildroot}/usr/share/man/man8/
 
 ###################################
 
@@ -61,6 +63,7 @@ then
   restorecon -RFi /{opt,srv}/springboot 
   restorecon -RFi /{lib,etc}/systemd/system/springboot*
   restorecon -RFi /var/{lib,log,run,tmp}/springboot
+  restorecon -RFi /usr/share/man
 fi
 
 ###################################
@@ -85,3 +88,4 @@ fi
 %dir		%{_docdir}/%{name}
 %license 	%{_docdir}/%{name}/LICENSE
 %doc		%{_docdir}/%{name}/README.md
+%doc		/usr/share/man/man*/*
