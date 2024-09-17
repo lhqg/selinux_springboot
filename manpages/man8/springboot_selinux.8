@@ -153,8 +153,6 @@ Whether to allow users processes running in the \fIsysadm_t\fR SELinux domain to
 .RS 4
 Whether to allow users processes running in the \fIsysadm_t\fR SELinux domain to modify/alter Springboot application authentication/sensitive files.
 .RE
-.PP
-.RE
 
 .SH File Contexts
 .PP
@@ -213,8 +211,6 @@ Application dynamic libraries files. May be deployed/created/rewritten by the Sp
 systemd unit files to control/manage the Springboot application services and targets.
 (Cannot be altered by the Springboot application)
 .RE
-.PP
-.RE
 
 .SH Port Types
 .PP
@@ -227,8 +223,6 @@ TCP port the Springboot application binds to and listens on for client connectio
 .RS 4
 TCP port the Springboot application binds to and listens on for monitoring purposes.
 .RE
-.PP
-.RE
 
 .SH Interfaces
 .PP
@@ -237,20 +231,28 @@ The Springboot SELinux policy is shipped with a set of "interfaces" to easily ex
 To use an given interface a small SELinux policy module source code must be created, compiled and finally loaded.
 .SS "Deployment interfaces"
 .PP
-.PP
-\fBspringboot_deployer(\fRdeployer_t\fB)\fR
+\fBspringboot_deployer(\fRdeployer\fB)\fR
 .RS 4
-Allows the SELinux domain/type deployer_t passed as its argument to deploy Springboot application files and to manage (stop/start/enable/disable) Springboot systemd units.
+Allows the SELinux domain/type deployer_t derived from passed argument to deploy Springboot application files and to manage (stop/start/enable/disable) Springboot systemd units.
 .RE
 .PP
-\fBspringboot_systemd_unit_instance_deployer(\fRdeployer_t\fB)\fR
+\fBspringboot_systemd_unit_instance_deployer(\fRdeployer\fB)\fR
 .RS 4
-Allows the SELinux domain/type deployer_t passed as its argument to deploy Springboot systemd unit files.
+Allows the SELinux domain/type deployer_t derived from passed argument to deploy Springboot generic systemd unit files.
+.br
+iIn general, this interface should not be used directly, the following one should be used instead.
 .RE
 .PP
-\fBspringboot_auth_deployer(\fRdeployer_t\fB)\fR
+\fBspringboot_systemd_unit_instance_deployer(\fRdeployer, MyApp\fB)\fR
 .RS 4
-Allows the SELinux domain/type deployer_t passed as its argument to deploy Springboot sensitive configuration files.
+Allows the SELinux domain/type deployer_t derived from first argument to deploy Springboot systemd unit files for application \fIMyApp\fR passed as its second argument.
+.br
+The springboot@\fIMyApp\fR.service specific unit files are assigned the correct SELinux context.
+.RE
+.PP
+\fBspringboot_auth_deployer(\fRdeployer\fB)\fR
+.RS 4
+Allows the SELinux domain/type deployer_t derived from passed argument to deploy Springboot sensitive configuration files.
 .RE
 .PP
 .RS 2
@@ -258,25 +260,23 @@ Allows the SELinux domain/type deployer_t passed as its argument to deploy Sprin
 .RS 2
 policy_module(springboot_ansible_deployment, 1.0.0)
 .br
-springboot_deployer(ansible_t)
+springboot_deployer(ansible)
 .br
-springboot_auth_deployer(ansible_t)
+springboot_auth_deployer(ansible)
 .RE
 .PP
 .SS "Other interfaces"
-\fBspringboot_monitor(\fRmonitor_t\fB)\R
+\fBspringboot_monitor(\fRmonitor\fB)\R
 .RS 4
-Allows the SELinux domain/type monitor_t passed as its argument to connect (TCP) to the Springboot application's moniroting port.
+Allows the SELinux domain/type monitor_t, derived from passed argument to connect (TCP) to the Springboot application's moniroting port.
 .PP
 .RS 2
 \fBExample:\fR SELinux source code to allow Nagios NRPE to use TCP monitoring of Springboot application
 .RS 2
 policy_module(springboot_nrpe_monitor, 1.0.0)
 .br
-springboot_monitor(nrpe_t)
+springboot_monitor(nrpe)
 .RE
-.RE
-.PP
 
 .SH Author
 .PP
