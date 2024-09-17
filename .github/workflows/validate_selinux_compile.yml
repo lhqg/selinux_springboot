@@ -111,8 +111,8 @@ jobs:
             module_vers=a[2]
           }
           END {
-            print "{semodule_name}={"module_name"}"
-            print "{semodule_vers}={"module_vers"}"
+            print "semodule_name="module_name
+            print "semodule_vers="module_vers
           }' se_module/${SEMODULE}.te >> $GITHUB_OUTPUT
 
   add_tag:
