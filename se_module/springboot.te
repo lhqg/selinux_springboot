@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.4.1)
+policy_module(springboot, 1.5.0)
 
 ########################################
 #
@@ -111,7 +111,12 @@ typeattribute	springboot_tmp_t	springboot_deploy_file_type;
 files_tmp_file(springboot_tmp_t)
 
 type		springboot_unit_file_t;
-systemd_unit_file(springboot_unit_file_t);
+ifdef(`distro_redhat',`
+	systemd_unit_file(springboot_unit_file_t);
+')
+ifdef(`distro_debian',`
+	init_unit_file(springboot_unit_file_t);
+')
 
 bool	allow_springboot_connectto_http		true;
 bool	allow_springboot_connectto_self		false;
@@ -187,6 +192,15 @@ gen_require(`
 	role	system_r;
 	
 	attribute	domain;
+
+	class	service	all_service_perms;
+')
+ifdef(`distro_debian', `
+	define(`manage_service_perms', `{ start stop status reload enable disable } ')
+	define(`lhqg__sendrecv_udp_socket_perms', `{ sendto recvfrom } ')
+')
+ifdef(`distro_redhat', `
+	define(`lhqg__sendrecv_udp_socket_perms', `{ sendto recvfrom send_msg recv_msg } ')
 ')
 
 ########################################
@@ -217,7 +231,16 @@ files_read_config_files(springboot_t)
 fs_read_noxattr_fs_files(springboot_t)
 fs_read_noxattr_fs_symlinks(springboot_t)
 fs_rw_cgroup_files(springboot_t)
-application_getattr_socket(springboot_t)
+
+ifdef(`distro_redhat',`
+	application_getattr_socket(springboot_t)
+')
+ifdef(`distro_redhat',`
+	gen_require(`
+        attribute application_domain_type;
+    ')
+    allow springboot_t	application_domain_type:socket_class_set getattr;
+')
 
 dev_read_rand(springboot_t)
 
@@ -302,7 +325,7 @@ if (allow_springboot_connectto_self) {
 
 if (allow_springboot_syslog_netsend) {
 	allow	springboot_t	syslogd_port_t:tcp_socket		name_connect;
-	allow	springboot_t	syslogd_port_t:udp_socket		send_msg;
+	allow	springboot_t	syslogd_port_t:udp_socket		lhqg__sendrecv_udp_socket_perms;
 	allow	springboot_t	syslog_tls_port_t:tcp_socket	name_connect;
 	allow	springboot_t	syslogd_t:peer					recv;
 }

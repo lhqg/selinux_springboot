@@ -28,6 +28,15 @@ env:
 
 jobs:
 
+  compile_el9:
+    name: Validate SELinux code (EL 9)
+    runs-on: ubuntu-latest
+    needs: compile_el8
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: lhqg/selinux_compile@centos9
+
   compile_el8:
     name: Validate SELinux code (EL 8)
     runs-on: ubuntu-latest
@@ -36,14 +45,14 @@ jobs:
       - uses: actions/checkout@master
       - uses: lhqg/selinux_compile@almalinux8
 
-  compile_el9:
-    name: Validate SELinux code (EL 9)
+  compile_fedora40:
+    name: Validate SELinux code (Fedora 40)
     runs-on: ubuntu-latest
-    continue-on-error: true
+    needs: [ compile_fedora39, compile_fedora38, compile_fedora37 ]
 
     steps:
       - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@centos9
+      - uses: lhqg/selinux_compile@fedora40
 
   compile_fedora37:
     name: Validate SELinux code (Fedora 37)
@@ -69,25 +78,35 @@ jobs:
       - uses: actions/checkout@master
       - uses: lhqg/selinux_compile@fedora39
 
-  compile_fedora40:
-    name: Validate SELinux code (Fedora 40)
+  compile_ubuntu24:
+    name: Validate SELinux code (Ubuntu 24)
+    runs-on: ubuntu-latest
+    needs: [ compile_ubuntu23, compile_ubuntu22 ]
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: lhqg/selinux_compile@ubuntu24
+
+  compile_ubuntu23:
+    name: Validate SELinux code (Ubuntu 23)
+    runs-on: ubuntu-latest
+    needs: compile_ubuntu22
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: lhqg/selinux_compile@ubuntu23
+
+  compile_ubuntu22:
+    name: Validate SELinux code (Ubuntu 22)
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@fedora40
-
-  compile_ubuntu:
-    name: Validate SELinux code (Ubuntu Latest)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@ubuntu
+      - uses: lhqg/selinux_compile@ubuntu22
 
   semodule_info:
     name: Get SELinux module informations
-    needs: [ compile_el8, compile_el9, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40, compile_ubuntu ]
+    needs: [ compile_el9, compile_fedora40, compile_ubuntu24 ]
       
     runs-on: ubuntu-latest
     
