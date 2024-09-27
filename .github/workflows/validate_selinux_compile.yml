@@ -77,9 +77,17 @@ jobs:
       - uses: actions/checkout@master
       - uses: lhqg/selinux_compile@fedora40
 
+  compile_ubuntu:
+    name: Validate SELinux code (Ubuntu Latest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: lhqg/selinux_compile@ubuntu
+
   semodule_info:
     name: Get SELinux module informations
-    needs: [ compile_el8, compile_el9, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40 ]
+    needs: [ compile_el8, compile_el9, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40, compile_ubuntu ]
       
     runs-on: ubuntu-latest
     

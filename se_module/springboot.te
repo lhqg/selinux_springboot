@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.4.0)
+policy_module(springboot, 1.4.1)
 
 ########################################
 #
@@ -39,7 +39,22 @@ attribute	springboot_consumed_svc_type;
 attribute	springboot_monitoring_port_type;
 
 
-systemd_domain_template(springboot)
+ifdef(`distro_redhat',`
+        systemd_domain_template(springboot)
+')
+
+ifdef(`distro_debian',`
+        type springboot_t;
+        type springboot_exec_t;
+
+        init_daemon_domain(springboot_t, springboot_exec_t)
+
+        allow init_t springboot_t:process2 { nnp_transition nosuid_transition };
+
+        kernel_read_system_state(springboot_t)
+        auth_use_nsswitch(springboot_t)
+')
+
 typeattribute	springboot_exec_t	springboot_file_type;
 typeattribute	springboot_exec_t	springboot_deploy_file_type;
 
