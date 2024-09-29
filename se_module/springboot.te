@@ -126,12 +126,14 @@ bool	allow_springboot_syslog_netsend		false;
 bool	allow_springboot_connectto_ldap		false;
 bool	allow_springboot_connectto_smtp		false;
 
-bool	allow_springboot_connectto_oracle	false;
+ifdef(`distro_redhat',`
+	bool	allow_springboot_connectto_oracle	false;
+	bool	allow_springboot_connectto_mongodb	false;
+')
 bool	allow_springboot_connectto_mysql	false;
 bool	allow_springboot_connectto_pgsql	false;
 bool	allow_springboot_connectto_redis	false;
 bool	allow_springboot_connectto_couchdb	false;
-bool	allow_springboot_connectto_mongodb	false;
 
 
 bool	allow_springboot_dynamic_libs				false;
@@ -146,12 +148,14 @@ gen_require(`
 	type	http_port_t;
 	type	smtp_port_t;
 	type	ldap_port_t;
+ifdef(`distro_redhat',`
 	type	oracle_port_t;
+	type	mongod_port_t;
+')
 	type	mysqld_port_t;
 	type	postgresql_port_t;
 	type	redis_port_t;
 	type	couchdb_port_t;
-	type	mongod_port_t;
 	type	syslog_tls_port_t;
 	type	syslogd_port_t;
 
@@ -160,7 +164,9 @@ gen_require(`
 	type	qmail_smtpd_t;
 	type	sendmail_t;
 	type	slapd_t;
+ifdef(`distro_redhat',`
 	type	dirsrv_t;
+')
 	type	mysqld_t;
 	type	postgresql_t;
 	type	redis_t;
@@ -179,7 +185,9 @@ gen_require(`
 	type	bin_t;
 	type	tmp_t;
 	type	shell_exec_t;
+ifdef(`distro_redhat',`
 	type	passwd_file_t;
+')
 	type	cert_t;
 
 	type	user_tmp_t;
@@ -295,7 +303,9 @@ allow	springboot_t	user_tmp_t:file		{ manage_file_perms map };
 
 allow	springboot_t	user_home_dir_t:dir	{ list_dir_perms };
 
+ifdef(`distro_redhat',`
 allow	springboot_t	passwd_file_t:file	{ read	open	getattr };
+')
 allow	springboot_t	shell_exec_t:file	{ getattr	open	read	execute};
 
 allow	springboot_t	cert_t:dir		list_dir_perms;
@@ -333,7 +343,9 @@ if (allow_springboot_syslog_netsend) {
 if (allow_springboot_connectto_ldap) {
 	allow	springboot_t	ldap_port_t:tcp_socket	name_connect;
 	allow	springboot_t	slapd_t:peer			recv;
+ifdef(`distro_redhat',`
 	allow	springboot_t	dirsrv_t:peer			recv;
+')
 }
 
 if (allow_springboot_connectto_smtp) {
@@ -343,9 +355,16 @@ if (allow_springboot_connectto_smtp) {
 	allow	springboot_t	sendmail_t:peer					recv;
 }
 
-if (allow_springboot_connectto_oracle) {
-	allow	springboot_t	oracle_port_t:tcp_socket	name_connect;
-}
+ifdef(`distro_redhat',`
+	if (allow_springboot_connectto_oracle) {
+		allow	springboot_t	oracle_port_t:tcp_socket	name_connect;
+	}
+
+	if (allow_springboot_connectto_mongodb) {
+		allow	springboot_t	mongod_port_t:tcp_socket	name_connect;
+		allow	springboot_t	mongod_t:peer				recv;
+	}
+')
 
 if (allow_springboot_connectto_mysql) {
 	allow	springboot_t	mysqld_port_t:tcp_socket	name_connect;	
@@ -366,12 +385,6 @@ if (allow_springboot_connectto_couchdb) {
 	allow	springboot_t	couchdb_port_t:tcp_socket	name_connect;
 	allow	springboot_t	couchdb_t:peer				recv;
 }
-
-if (allow_springboot_connectto_mongodb) {
-	allow	springboot_t	mongod_port_t:tcp_socket	name_connect;
-	allow	springboot_t	mongod_t:peer				recv;
-}
-
 
 #	Allow to consume authorized network services
 allow	springboot_t	springboot_consumed_svc_type:tcp_socket		name_connect;
