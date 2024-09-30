@@ -43,28 +43,62 @@ jobs:
           echo "version=${version_from_tag}" >> $GITHUB_OUTPUT
           echo "release=${release_from_tag}" >> $GITHUB_OUTPUT
   
-  build_RPMs:
-    name: Build RPMs and upload them to release
+  build_fedora:
+    name: Build RPMs for Fedora and upload them to release
     needs: get_release_info
     uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_rpm.yml@main
     secrets:
       gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
       gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
     with:
+      build_distro: fedora
+      build_distro_versions: '[ "37", "38", "39", "40" ]'
       spec_file_location: rpm/
       selinux_files_location: se_module/
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
       provided_version: ${{ needs.get_release_info.outputs.version_number }}
       provided_release: ${{ needs.get_release_info.outputs.release_number }}
       
-  build_DEBs:
-    name: Build Debian/Ubuntu packages and upload them to release
+  build_EL:
+    name: Build RPMs for EL and upload them to release
+    needs: get_release_info
+    uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_rpm.yml@main
+    secrets:
+      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
+    with:
+      build_distro: almalinux
+      build_distro_versions: '[ "8", "9" ]'
+      spec_file_location: rpm/
+      selinux_files_location: se_module/
+      release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
+      provided_version: ${{ needs.get_release_info.outputs.version_number }}
+      provided_release: ${{ needs.get_release_info.outputs.release_number }}
+      
+  build_Debian:
+    name: Build Debian packages and upload them to release
     needs: get_release_info
     uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_deb.yml@main
     secrets:
       gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
       gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
     with:
+      build_distro: debian
+      build_distro_versions: '[ "11", "12" ]'
+      build_material_dir: dpkg/
+      release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
+      package_version: ${{ needs.get_release_info.outputs.version_number }}
+      
+  build_Ubuntu:
+    name: Build Ubuntu packages and upload them to release
+    needs: get_release_info
+    uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_deb.yml@main
+    secrets:
+      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
+    with:
+      build_distro: ubuntu
+      build_distro_versions: '[ "22.04", "24.04" ]'
       build_material_dir: dpkg/
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
       package_version: ${{ needs.get_release_info.outputs.version_number }}
