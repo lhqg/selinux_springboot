@@ -60,7 +60,7 @@ jobs:
   build_DEBs:
     name: Build Debian/Ubuntu packages and upload them to release
     needs: get_release_info
-    uses: lhqg/build_selinux_deb/.github/workflows/build_semodule_deb.yml@main
+    uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_deb.yml@main
     secrets:
       gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
       gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
