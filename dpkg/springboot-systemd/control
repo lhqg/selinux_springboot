@@ -1,0 +1,10 @@
+Package:			springboot-systemd
+Maintainer:			LHQG <tehcnical@lhqg.fr>
+Homepage:			https://github.com/lhqg/selinux_springboot
+Architecture:		all
+Section:			misc
+Priority:			optional
+Standards-Version:	4.7.0
+Build-depends:		debhelper-compat (= 13)
+Depends:			springboot-selinux (= %version%), systemd
+Description:		Springboot systemd units

@@ -1,0 +1,12 @@
+Source:				springboot-selinux
+Maintainer:			LHQG <technical@lhqg.fr>
+Homepage:			https://github.com/lhqg/selinux_springboot
+Section:			Misc
+Priority:			optional
+Standards-Version:	4.7.0
+Build-depends:		debhelper-compat (= 13), selinux-policy-dev 
+
+Package:			springboot-selinux
+Architecture:		all
+Depends:			policycoreutils, selinux-utils, selinux-basics
+Description:		SELinux policy module for Springboot applications
