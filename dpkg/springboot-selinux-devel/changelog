@@ -1,0 +1,5 @@
+%name% (%version%) UNRELEASE; urgency=low
+
+  * Changelog details on GitHub repository page
+
+ -- LHQG SAS <technical@lhqg.fr>  %date%

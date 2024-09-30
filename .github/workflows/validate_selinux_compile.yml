@@ -28,58 +28,74 @@ env:
 
 jobs:
 
-  compile_el8:
-    name: Validate SELinux code (EL 8)
+  compile_el:
+    name: Compile SELinux code for Red Hat EL family branch
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        el_vers: [ '8', '9' ]
+        
     steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@almalinux8
+      - name: Checkout SELinux code
+        uses: actions/checkout@master
 
-  compile_el9:
-    name: Validate SELinux code (EL 9)
+      - name: Compile SELinux code
+        uses: lhqg/selinux_compile@main
+        with:
+          distro: 'almalinux'
+          distro_vers: ${{ matrix.el_vers }}
+
+  compile_fedora:
+    name: Compile SELinux code for Fedora family branch
     runs-on: ubuntu-latest
-    continue-on-error: true
-
+    strategy:
+      matrix:
+        fedora_vers: [ '37', '38', '39', '40' ]
     steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@centos9
+      - name: Checkout SELinux code
+        uses: actions/checkout@master
 
-  compile_fedora37:
-    name: Validate SELinux code (Fedora 37)
+      - name: Compile SELinux code
+        uses: lhqg/selinux_compile@main
+        with:
+          distro: 'fedora'
+          distro_vers: ${{ matrix.fedora_vers }}
+
+  compile_ubuntu:
+    name: Compile SELinux code for Ubuntu family branch
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        ubuntu_vers: [ '22.04', '24.04' ]
     steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@fedora37
+      - name: Checkout SELinux code
+        uses: actions/checkout@master
 
-  compile_fedora38:
-    name: Validate SELinux code (Fedora 38)
+      - name: Compile SELinux code
+        uses: lhqg/selinux_compile@main
+        with:
+          distro: 'ubuntu'
+          distro_vers: ${{ matrix.ubuntu_vers }}
+
+  compile_debian:
+    name: Compile SELinux code for Debian family branch
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        debian_vers: [ '11', '12' ]
     steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@fedora38
+      - name: Checkout SELinux code
+        uses: actions/checkout@master
 
-  compile_fedora39:
-    name: Validate SELinux code (Fedora 39)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@fedora39
-
-  compile_fedora40:
-    name: Validate SELinux code (Fedora 40)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@master
-      - uses: lhqg/selinux_compile@fedora40
+      - name: Compile SELinux code
+        uses: lhqg/selinux_compile@main
+        with:
+          distro: 'debian'
+          distro_vers: ${{ matrix.debian_vers }}
 
   semodule_info:
     name: Get SELinux module informations
-    needs: [ compile_el8, compile_el9, compile_fedora37, compile_fedora38, compile_fedora39, compile_fedora40 ]
+    needs: [ compile_el, compile_fedora, compile_ubuntu, compile_debian ]
       
     runs-on: ubuntu-latest
     
