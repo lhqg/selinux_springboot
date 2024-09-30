@@ -42,6 +42,8 @@ install -m 0444 %{_builddir}/systemd/env.SAMPLE %{buildroot}/%{_docdir}/%{name}/
 
 %post
 
+systemctl daemon-reload
+
 if selinuxenabled
 then
   restorecon -Fi /opt/springboot/bin/springboot-service.sh

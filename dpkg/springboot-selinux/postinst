@@ -1,0 +1,16 @@
+#!/bin/bash
+
+bunzip2 /usr/share/selinux/default/springboot.pp.bz2
+semodule -i /usr/share/selinux/default/springboot.pp
+RC=$?
+bzip2 /usr/share/selinux/default/springboot.pp
+
+if selinuxenabled
+then
+  restorecon -RFi /{opt,srv}/springboot 
+  restorecon -RFi /{lib,etc}/systemd/system/springboot*
+  restorecon -RFi /var/{lib,log,run,tmp}/springboot
+  restorecon -RFi /usr/share/man
+fi
+
+exit $RC

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+RC=0
+
+if [[ "$1" == "remove" ]]
+then
+	semodule -l | grep -qvw springboot || semodule -r springboot
+	RC=$?
+fi
+
+exit $RC

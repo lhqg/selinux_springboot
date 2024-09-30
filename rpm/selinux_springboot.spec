@@ -36,6 +36,7 @@ The Springboot application will run in the springboot_t domain.
 
 %build
 
+make -f /usr/share/selinux/devel/Makefile -C %{_builddir} clean
 make -f /usr/share/selinux/devel/Makefile -C %{_builddir} springboot.pp
 
 ###################################
@@ -51,6 +52,8 @@ install -m 0555 %{_builddir}/scripts/* %{buildroot}/%{_datarootdir}/%{name}/
 install -m 0444 %{_builddir}/springboot.pp %{buildroot}/usr/share/selinux/packages/targeted/
 install -m 0444 %{_builddir}/{LICENSE,README.md} %{buildroot}/%{_docdir}/%{name}/
 install -m 0444 %{_builddir}/manpages/man8/*.8 %{buildroot}/usr/share/man/man8/
+
+make -f /usr/share/selinux/devel/Makefile -C %{_builddir} clean
 
 ###################################
 
@@ -72,7 +75,7 @@ fi
 
 if [ $1 -eq 0 ]
 then
-  semodule -r springboot
+  semodule -l | grep -qvw springboot || semodule -r springboot
 fi
 
 ###################################

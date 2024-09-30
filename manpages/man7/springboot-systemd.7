@@ -1,0 +1,89 @@
+'\" t
+.TH springboot\-systemd 7 "Springboot systemd units man page"
+
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+
+.SH Name
+springboot\-systemd \- systemd units for Java Spring Boot services
+
+.SH Description
+.PP
+The \fBspringboot-systemd\fR package deploys multiple \fIsystemd\fR unit definitions to
+simplify Java Spring Boot application services operations such as start, stop, status control
+and to allow applications to be started at boot time.
+.PP
+
+.SH systemd units
+.PP
+
+.SS Template service unit 
+.PP
+\fBspringboot@.service\fR
+.RS 4
+This unit is a template unit designed to manage all Spring Boot applications the same way in terms
+of service operations.
+.PP
+The service unit relies on the MANDATORY files/directories:
+.RS 4
+- /opt/springboot/<\fIinstance name\fR>: main installation directory for a specific Spring Boot application
+.br
+- /opt/springboot/<\fIinstance name\fR>/env: environment file with paramaters needed by the Java VM
+for a specific Spring Boot application (See example file \fI/usr/share/doc/springboot-systemd/env.SAMPLE\fR)
+.PP
+.RE
+.RS 4
+For a given application named \fIMyApp\fR, the corresponding systemd service inistance is 
+\fBspringboot@\fIMyApp\fR\fB.service\fR.
+.br
+The required environment file is \fB/opt/springboot/\fIMyApp\fB/env\fR
+.RE
+.PP
+
+.SS Target units
+.PP
+\fBspringboot.target\fR
+.RS 4
+This target groups all instances of the \fBspringboot@.service\fR template service unit.
+.br
+It is wanted by the \fBdefault.target\fR unit
+and as such if this target is enabled it will start all the enabled instances at boot time.
+.RE
+.PP
+
+\fBspringboot-shutdown.target\fR
+.RS 4
+This target shuts down all instances of the \fBspringboot@.service\fR template service unit.
+.RE
+.PP
+
+
+.SH Author
+.PP
+The Springboot systemd units package was initially authored by Hubert Quarantel-Colombani and is now published and maintained by LHQG <https://lhqg.fr/>
+.RE
+
+.SH "See Also"
+.PP
+\fBspringboot_selinux\fR(8),
+\fBsystemd\fR(1),
+\fBsystemctl\fR(1)
+.PP
+LHQG GitHub repository <https://github.com/lhqg/selinux_springboot/>

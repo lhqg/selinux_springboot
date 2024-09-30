@@ -1,0 +1,10 @@
+#!/bin/bash
+
+systemctl daemon-reload
+
+if selinuxenabled
+then
+  restorecon -Fi /opt/springboot/bin/springboot-service.sh
+  restorecon -RFi /{lib,etc}/systemd/system/springboot*
+  restorecon -RFi /usr/share/doc/springboot-systemd/
+fi
