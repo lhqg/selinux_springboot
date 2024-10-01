@@ -89,7 +89,7 @@ jobs:
       build_distro_versions: '[ "11", "12" ]'
       build_material_dir: dpkg
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
-      package_version: ${{ needs.get_release_info.outputs.version_number }}
+      package_version: ${{ needs.get_release_info.outputs.version_number }}-${{ needs.get_release_info.outputs.release_number }}
       previous_tag: ${{ needs.get_release_info.outputs.previous_tag }}
       
   build_Ubuntu:
@@ -104,7 +104,7 @@ jobs:
       build_distro_versions: '[ "22.04", "24.04" ]'
       build_material_dir: dpkg
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
-      package_version: ${{ needs.get_release_info.outputs.version_number }}
+      package_version: ${{ needs.get_release_info.outputs.version_number }}-${{ needs.get_release_info.outputs.release_number }}
       previous_tag: ${{ needs.get_release_info.outputs.previous_tag }}
 
   all_green:
