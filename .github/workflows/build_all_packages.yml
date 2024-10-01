@@ -21,6 +21,7 @@ jobs:
       upload_url: ${{ steps.get_release_url.outputs.upload_url }}
       version_number: ${{ steps.get_release_version.outputs.version }}
       release_number: ${{ steps.get_release_version.outputs.release }}
+      previous_tag: ${{ steps.get.outputs.previous_tag }}
 
     steps:
       - name: Checkout code
@@ -34,7 +35,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
        
-      - name: Retrieve version and release numbers
+      - name: Retrieve version/release numbers, and previous tag
         id: get_release_version
         run: |
           version_from_tag=$( echo "${{ github.ref_name }}" | sed -E 's,^v?([0-9]+\.[0-9]+\.[0-9]+).*$,\1,' )
@@ -42,8 +43,9 @@ jobs:
           [ -z "${release_from_tag}" ] && release_from_tag=0
           echo "version=${version_from_tag}" >> $GITHUB_OUTPUT
           echo "release=${release_from_tag}" >> $GITHUB_OUTPUT
+          git tag | tail -2 | awk '(NR==1){print "previous_tag="$1}' >> $GITHUB_OUTPUT
   
-  build_fedora:
+  build_Fedora:
     name: Build RPMs for Fedora and upload them to release
     needs: get_release_info
     uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_rpm.yml@main
@@ -85,9 +87,10 @@ jobs:
     with:
       build_distro: debian
       build_distro_versions: '[ "11", "12" ]'
-      build_material_dir: dpkg/
+      build_material_dir: dpkg
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
       package_version: ${{ needs.get_release_info.outputs.version_number }}
+      previous_tag: ${{ needs.get_release_info.outputs.previous_tag }}
       
   build_Ubuntu:
     name: Build Ubuntu packages and upload them to release
@@ -99,7 +102,22 @@ jobs:
     with:
       build_distro: ubuntu
       build_distro_versions: '[ "22.04", "24.04" ]'
-      build_material_dir: dpkg/
+      build_material_dir: dpkg
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
       package_version: ${{ needs.get_release_info.outputs.version_number }}
-      
+      previous_tag: ${{ needs.get_release_info.outputs.previous_tag }}
+
+  all_green:
+    name: All jobs successful
+    if: ${{ always() }}
+    needs:
+      - build_EL
+      - build_Fedora
+      - build_Debian
+      - build_Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Synthetize results
+        run: |
+          grep -Eqv 'failure' <<< '${{ needs.build_EL.result }},${{ needs.build_Fedora.result }},${{ needs.build_Debian.result }},${{ needs.build_Ubuntu.result }}' 
+    
