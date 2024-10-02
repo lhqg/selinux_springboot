@@ -43,14 +43,14 @@ of service operations.
 .PP
 The service unit relies on the MANDATORY files/directories:
 .RS 4
-- /opt/springboot/<\fIinstance name\fR>: main installation directory for the Spring Boot application
+- /opt/springboot/<\fIinstance name\fR>: main installation directory for a specific Spring Boot application
 .br
-- /opt/springboot/<\fIinstance name\fR>/env: envrionment file with paramaters needed by the Java VM
-for the Spring Boot application (See example file \fI/usr/share/doc/springboot-systemd/env.SAMPLE\fR)
+- /opt/springboot/<\fIinstance name\fR>/env: environment file with paramaters needed by the Java VM
+for a specific Spring Boot application (See example file \fI/usr/share/doc/springboot-systemd/env.SAMPLE\fR)
 .PP
 .RE
 .RS 4
-For a given application named \fIMyAPP\fR, the corresponding systemd service inistance is 
+For a given application named \fIMyApp\fR, the corresponding systemd service inistance is 
 \fBspringboot@\fIMyApp\fR\fB.service\fR.
 .br
 The required environment file is \fB/opt/springboot/\fIMyApp\fB/env\fR

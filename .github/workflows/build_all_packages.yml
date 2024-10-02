@@ -21,7 +21,7 @@ jobs:
       upload_url: ${{ steps.get_release_url.outputs.upload_url }}
       version_number: ${{ steps.get_release_version.outputs.version }}
       release_number: ${{ steps.get_release_version.outputs.release }}
-      previous_tag: ${{ steps.get.outputs.previous_tag }}
+      previous_tag: ${{ steps.get_release_version.outputs.previous_tag }}
 
     steps:
       - name: Checkout code
@@ -82,8 +82,8 @@ jobs:
     needs: get_release_info
     uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_deb.yml@main
     secrets:
-      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
-      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
+      gpg_private_key: ${{ secrets.DEB_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.DEB_SIGNING_KEY_PASSWORD }}
     with:
       build_distro: debian
       build_distro_versions: '[ "11", "12" ]'
@@ -97,8 +97,8 @@ jobs:
     needs: get_release_info
     uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_deb.yml@main
     secrets:
-      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
-      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
+      gpg_private_key: ${{ secrets.DEB_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.DEB_SIGNING_KEY_PASSWORD }}
     with:
       build_distro: ubuntu
       build_distro_versions: '[ "22.04", "24.04" ]'
