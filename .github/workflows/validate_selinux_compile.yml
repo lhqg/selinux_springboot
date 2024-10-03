@@ -142,7 +142,14 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Run Changelog CI
+        uses: saadmk11/changelog-ci@v1.1.2
+        with:
+          release_version: v${{ needs.semodule_info.outputs.semodule_vers }}
+          config_file: changelog-ci-config.yml
+
       - name: Tag the branch with the SELinux module version and draft a pre-release
+        id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -151,4 +158,5 @@ jobs:
           release_name: Release candidate for v${{ needs.semodule_info.outputs.semodule_vers }}
           draft: true
           prerelease: true
+          body_path: CHANGELOG.md
       
