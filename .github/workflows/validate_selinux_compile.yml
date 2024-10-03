@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Compile SELinux code
-        uses: lhqg/selinux_compile@multi
+        uses: lhqg/selinux_compile@main
         with:
           distro: 'almalinux'
           distro_vers: ${{ matrix.el_vers }}
@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Compile SELinux code
-        uses: lhqg/selinux_compile@multi
+        uses: lhqg/selinux_compile@main
         with:
           distro: 'fedora'
           distro_vers: ${{ matrix.fedora_vers }}
@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Compile SELinux code
-        uses: lhqg/selinux_compile@multi
+        uses: lhqg/selinux_compile@main
         with:
           distro: 'ubuntu'
           distro_vers: ${{ matrix.ubuntu_vers }}
@@ -88,7 +88,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Compile SELinux code
-        uses: lhqg/selinux_compile@multi
+        uses: lhqg/selinux_compile@main
         with:
           distro: 'debian'
           distro_vers: ${{ matrix.debian_vers }}

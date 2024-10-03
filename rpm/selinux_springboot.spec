@@ -52,6 +52,8 @@ install -m 0444 %{_builddir}/springboot.pp %{buildroot}/usr/share/selinux/packag
 install -m 0444 %{_builddir}/{LICENSE,README.md} %{buildroot}/%{_docdir}/%{name}/
 install -m 0444 %{_builddir}/manpages/man8/*.8 %{buildroot}/usr/share/man/man8/
 
+make -f /usr/share/selinux/devel/Makefile -C %{_builddir} clean
+
 ###################################
 
 %post

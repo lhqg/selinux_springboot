@@ -19,3 +19,6 @@ install: compile
 	@install -m 0444 $(SOURCEDIR)/LICENSE $(BUILDDIR)/$(DOCDIR)/$(NAME)/
 	@install -m 0444 $(SOURCEDIR)/README.md $(BUILDDIR)/$(DOCDIR)/$(NAME)/
 	@install -m 0444 $(SOURCEDIR)/manpages/man8/*.8 $(BUILDDIR)/usr/share/man/man8/
+
+	@make -f /usr/share/selinux/devel/Makefile -C $(SOURCEDIR)/se_module clean
+	@rm -f $(SOURCEDIR)/se_module/springboot.pp.bz2
