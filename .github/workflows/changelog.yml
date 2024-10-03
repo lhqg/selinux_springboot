@@ -5,6 +5,11 @@ on:
     types: [ opened ]
 
   workflow_dispatch:
+    inputs:
+        release_version:
+          required: true
+          type: string
+          description: 'Target (last) version for the changelog to be generated'
 
 jobs:
   build:
@@ -15,3 +20,6 @@ jobs:
 
       - name: Run Changelog CI
         uses: saadmk11/changelog-ci@v1.1.2
+        with:
+          release_version: ${{ inputs.release_version }}
+          config_file: changelog-ci-config.yml
