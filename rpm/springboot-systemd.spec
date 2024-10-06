@@ -30,11 +30,13 @@ mkdir -p -m 0755 %{buildroot}/%{_docdir}/%{name}/examples
 mkdir -p -m 0755 %{buildroot}/usr/lib/systemd/system
 mkdir -p -m 0755 %{buildroot}/opt/springboot/bin
 mkdir -p -m 0755 %{buildroot}/opt/springboot/service
+mkdir -p -m 0755 %{buildroot}/usr/share/man/man7
 
 install -m 0444 %{_builddir}/systemd/springboot@.service %{buildroot}/usr/lib/systemd/system/
 install -m 0444 %{_builddir}/systemd/springboot.target %{buildroot}/usr/lib/systemd/system/
 install -m 0444 %{_builddir}/systemd/springboot-shutdown.target %{buildroot}/usr/lib/systemd/system/
 install -m 0555 %{_builddir}/systemd/springboot-service.sh %{buildroot}/opt/springboot/bin/
+install -m 0444 %{_builddir}/manpages/man7/*.7 %{buildroot}/usr/share/man/man7/
 
 install -m 0444 %{_builddir}/systemd/env.SAMPLE %{buildroot}/%{_docdir}/%{name}/examples/
 
@@ -63,4 +65,5 @@ fi
   
 %dir		%{_docdir}/%{name}
 %doc		%{_docdir}/%{name}/examples/env.SAMPLE
+%doc		/usr/share/man/man*/*
 
