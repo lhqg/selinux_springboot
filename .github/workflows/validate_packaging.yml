@@ -1,0 +1,56 @@
+#
+# RPM/DEB packaging code validation workflow
+#
+name: "Validate RPM/DEB packaging"
+
+concurrency: 
+  group: SELinux_compile_wkf_group
+
+on:
+  workflow_dispatch:
+
+  push:
+    paths:
+      - 'rpm/**'
+      - 'dpkg/**'
+      - 'manpages/**'
+
+jobs:
+
+  package_el:
+    name: Validate package build for Red Hat EL family branch
+    uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_rpm.yml@main
+    secrets:
+      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
+    with:
+      build_distro: almalinux
+      build_distro_versions: '[ "9" ]'
+      spec_file_location: rpm/
+      selinux_files_location: se_module/
+      provided_version: '0.0.1'
+      
+  package_ubuntu:
+    name: Validate package build for Ubuntu family branch
+    uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_deb.yml@main
+    secrets:
+      gpg_private_key: ${{ secrets.DEB_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.DEB_SIGNING_KEY_PASSWORD }}
+    with:
+      build_distro: ubuntu
+      build_distro_versions: '[ "24.04" ]'
+      build_material_dir: dpkg
+      package_version: '0.0.1'
+
+  all_green:
+    name: All jobs successful
+    if: ${{ always() }}
+    needs:
+      - package_el
+      - package_ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Synthetize results
+        run: |
+          grep -Eqv 'failure' <<< '${{ needs.package_el.result }},${{ needs.package_ubuntu.result }}' 
+    
