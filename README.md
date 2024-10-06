@@ -6,7 +6,7 @@
 [![GitHub Last commit](https://img.shields.io/github/last-commit/lhqg/selinux_springboot)](https://github.com/lhqg/selinux_springboot/commits/main)
 ![GitHub Downloads](https://img.shields.io/github/downloads/lhqg/selinux_springboot/total)
 
-# SELinux policy module for Springboot applications
+# SELinux policy module for Springboot (Spring Boot) applications
 
 <https://github.com/lhqg/selinux_springboot>
 
@@ -28,8 +28,8 @@
 
 ## Introduction
 
-This SELinux policy module aims to prevent a Springboot (daemon/background) application to
- perform unexpected actions on a Linux host.
+This SELinux policy module aims to prevent a Java Spring Boot (daemon/background)
+application to perform unexpected actions on a Linux host.
 
 It should be used when the Springboot application is possibly exposed to a world full of
  *bad guys*.
@@ -268,8 +268,8 @@ Will allow the Ansible domain `ansible_t` to create/start/activate/deactivate th
 
 ### Starting the Springboot application
 
-The Springboot application should always and ony be started as a **systemd** service using
-the`systemctl` command.
+The Java Springboot application should always and only be started as a
+**systemd** service using the`systemctl` command.
 
 The service or target unit files MUST be located in /etc/systemd/system or in
 /lib/systemd/system, the file name MUST start with `springboot`.
