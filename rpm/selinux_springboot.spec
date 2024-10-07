@@ -29,9 +29,6 @@ The Springboot application will run in the springboot_t domain.
 %clean
 %{__rm} -rf %{buildroot}
 
-#%prep
-#%setup -q
-
 ###################################
 
 %build
