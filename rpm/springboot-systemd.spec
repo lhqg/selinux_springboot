@@ -23,8 +23,8 @@ Definitions of systemd units for Springboot applications.
 
 %pre
 
-getent group springboot > /dev/null || groupadd -r springboot
-getent passwd springboot > /dev/null || useradd -r -g springboot -s /sbin/nologin -d /home/springboot -c "Springboot" springboot
+getent group springboot >/dev/null || groupadd -r springboot
+getent passwd springboot >/dev/null || useradd -r -g springboot -s /sbin/nologin -d /home/springboot -c "Springboot" springboot
 exit 0
 
 ###################################
