@@ -1,5 +1,8 @@
 [Unit]
 Description=Springboot Server - %I
+Documentation=man:springboot_selinux(8)
+Documentation=man:springboot-systemd(7)
+Documentation=https://github.com/lhqg/selinux_springboot/
 
 Requires=network-online.target time-sync.target
 After=network-online.target time-sync.target basic.target

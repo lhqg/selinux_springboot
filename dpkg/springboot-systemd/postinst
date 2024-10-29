@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if ! getent passwd springboot >/dev/null; then
+  adduser --quiet --system --group --shell /usr/sbin/nologin springboot
+fi
+
 systemctl daemon-reload
 
 if selinuxenabled
