@@ -1,5 +1,8 @@
 [Unit]
 Description=Shutdown target for all Springboot application services
+Documentation=man:springboot_selinux(8)
+Documentation=man:springboot-systemd(7)
+Documentation=https://github.com/lhqg/selinux_springboot/
 
 Before=shutdown.target
 
