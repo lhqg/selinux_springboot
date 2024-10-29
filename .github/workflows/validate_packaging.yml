@@ -27,7 +27,6 @@ jobs:
       build_distro: almalinux
       build_distro_versions: '[ "9" ]'
       spec_file_location: rpm/
-      selinux_files_location: se_module/
       provided_version: '0.0.1'
       
   package_ubuntu:
