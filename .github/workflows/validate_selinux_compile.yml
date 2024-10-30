@@ -113,23 +113,42 @@ jobs:
       - name: Get SELinux policy module characteristics
         id: semodule_chars
         run: |
+          if [ -f "main-semodule-file"]
+          then
+            semodule_file=$( cat main-semodule-file )
+          fi
+
+          if [ -z "${semodule_file}" ]
+          then
+            if [ -n "${SEMODULE}" ]
+            then
+              semodule_file="se_module/${SEMODULE}.te"
+            fi
+          fi
+
+          if [ ! -f "${semodule_file}" ]
+          then
+            echo '::error title=SEmoduleNotFound::Unable to retrieve SELinux module name'
+            exit 1
+          fi
+
           awk '
-          /^[[:blank:]]*module[[:blank:]]+/ {
-            sub("[[:blank:]]*;$", "")
-            module_name=$2
-            module_vers=$3
-          }
-          /^[[:blank:]]*policy_module[[:blank:]]*\(/ {
-            sub("^[[:blank:]]*policy_module[[:blank:]]*[(][[:blank:]]*", "")
-            sub("[[:blank:]]*)[[:blank:]]*$", "")
-            split($0, a, "[[:blank:]]*,[[:blank:]]*")
-            module_name=a[1]
-            module_vers=a[2]
-          }
-          END {
-            print "semodule_name="module_name
-            print "semodule_vers="module_vers
-          }' se_module/${SEMODULE}.te >> $GITHUB_OUTPUT
+            /^[[:blank:]]*module[[:blank:]]+/ {
+              sub("[[:blank:]]*;$", "")
+              module_name=$2
+              module_vers=$3
+            }
+            /^[[:blank:]]*policy_module[[:blank:]]*\(/ {
+              sub("^[[:blank:]]*policy_module[[:blank:]]*[(][[:blank:]]*", "")
+              sub("[[:blank:]]*)[[:blank:]]*$", "")
+              split($0, a, "[[:blank:]]*,[[:blank:]]*")
+              module_name=a[1]
+              module_vers=a[2]
+            }
+            END {
+              print "semodule_name="module_name
+              print "semodule_vers="module_vers
+            }' ${semodule_file} >> $GITHUB_OUTPUT
 
   add_tag:
     name: Add SELinux module version tag on the branch
