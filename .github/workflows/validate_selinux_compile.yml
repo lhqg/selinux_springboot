@@ -4,8 +4,7 @@
 name: "Validate SELinux code"
 
 concurrency: 
-  group: SELinux_compile_wkf_group
-
+  group: SELinux_compile-${{ github.ref }}
 
 on:
   workflow_dispatch:
@@ -113,7 +112,7 @@ jobs:
       - name: Get SELinux policy module characteristics
         id: semodule_chars
         run: |
-          if [ -f "main-semodule-file"]
+          if [ -f "main-semodule-file" ]
           then
             semodule_file=$( cat main-semodule-file )
           fi

@@ -4,7 +4,7 @@
 name: "Build RPM and DEB packages to install compiled SELinux policy module"
 
 concurrency: 
-  group: SELinux_compile_wkf_group
+  group: SELinux_compile-${{ github.ref }}
 
 on:
   release:
@@ -48,7 +48,7 @@ jobs:
               END { print "version="v ; print "release="r }' <<< '${{ github.ref_name }}' >> $GITHUB_OUTPUT
             git tag | tail -2 | awk '(NR==1){print "previous_tag="$1}' >> $GITHUB_OUTPUT
           else
-            if [ -f "main-semodule-file"]
+            if [ -f "main-semodule-file" ]
             then
               semodule_file=$( cat main-semodule-file )
               if [ -f "${semodule_file}" ]

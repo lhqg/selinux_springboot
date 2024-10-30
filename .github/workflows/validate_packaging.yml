@@ -4,14 +4,14 @@
 name: "Validate RPM/DEB packaging"
 
 concurrency: 
-  group: SELinux_compile_wkf_group
+  group: SELinux_compile-${{ github.ref }}
 
 on:
   workflow_dispatch:
 
   push:
     paths:
-      - 'rpm/**'
+      - 'rpm/**.spec'
       - 'dpkg/**'
       - 'manpages/**'
 
