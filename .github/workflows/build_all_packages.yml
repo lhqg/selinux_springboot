@@ -133,7 +133,7 @@ jobs:
       previous_tag: ${{ needs.get_release_info.outputs.previous_tag }}
       sftp_server: ${{ vars.SSH_OVH_HOST }}
       sftp_user: ${{ vars.SSH_OVH_USER }}
-      sftp_remote_path: www/repo/public/debian 
+      sftp_remote_path: www/repo/public/debian
       
   build_Ubuntu:
     name: Build Ubuntu packages and upload them to release
@@ -152,7 +152,7 @@ jobs:
       previous_tag: ${{ needs.get_release_info.outputs.previous_tag }}
       sftp_server: ${{ vars.SSH_OVH_HOST }}
       sftp_user: ${{ vars.SSH_OVH_USER }}
-      sftp_remote_path: www/repo/public/ubuntu 
+      sftp_remote_path: www/repo/public/ubuntu
 
   all_green:
     name: All jobs successful
