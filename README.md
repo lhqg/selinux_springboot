@@ -8,7 +8,7 @@
 
 # SELinux policy module for Springboot (Spring Boot) applications
 
-<https://github.com/lhqg/selinux_springboot>
+Maintained and provided as a community contribution by [LHQG](https://www.lhqg.fr/).
 
 ## Table of Contents
 
