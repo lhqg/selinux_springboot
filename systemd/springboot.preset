@@ -1,0 +1,6 @@
+# Also see:
+# https://fedoraproject.org/wiki/Starting_services_by_default
+#
+# LHQG, enable:x
+ the Spring Boot target unit
+enable springboot.target

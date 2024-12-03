@@ -4,11 +4,12 @@ if ! getent passwd springboot >/dev/null; then
   adduser --quiet --system --group --shell /usr/sbin/nologin springboot
 fi
 
-systemctl daemon-reload
-
 if selinuxenabled
 then
   restorecon -Fi /opt/springboot/bin/springboot-service.sh
   restorecon -RFi /{lib,etc}/systemd/system/springboot*
+  restorecon -RFi /{lib,etc}/systemd/system-preset/*springboot.preset
   restorecon -RFi /usr/share/doc/springboot-systemd/
 fi
+
+systemctl daemon-reload

@@ -33,12 +33,14 @@ exit 0
 
 mkdir -p -m 0755 %{buildroot}/%{_docdir}/%{name}/examples
 mkdir -p -m 0755 %{buildroot}/usr/lib/systemd/system
+mkdir -p -m 0755 %{buildroot}/usr/lib/systemd/system-preset
 mkdir -p -m 0755 %{buildroot}/opt/springboot/bin
 mkdir -p -m 0755 %{buildroot}/opt/springboot/service
 mkdir -p -m 0755 %{buildroot}/usr/share/man/man7
 
 install -m 0444 %{_builddir}/systemd/springboot@.service %{buildroot}/usr/lib/systemd/system/
 install -m 0444 %{_builddir}/systemd/springboot.target %{buildroot}/usr/lib/systemd/system/
+install -m 0444 %{_builddir}/systemd/springboot.preset %{buildroot}/usr/lib/systemd/system-preset/90-springboot.preset
 install -m 0444 %{_builddir}/systemd/springboot-shutdown.target %{buildroot}/usr/lib/systemd/system/
 install -m 0555 %{_builddir}/systemd/springboot-service.sh %{buildroot}/opt/springboot/bin/
 install -m 0444 %{_builddir}/manpages/man7/*.7 %{buildroot}/usr/share/man/man7/
@@ -49,14 +51,15 @@ install -m 0444 %{_builddir}/systemd/env.SAMPLE %{buildroot}/%{_docdir}/%{name}/
 
 %post
 
-systemctl daemon-reload
-
 if selinuxenabled
 then
   restorecon -Fi /opt/springboot/bin/springboot-service.sh
   restorecon -RFi /{lib,etc}/systemd/system/springboot*
+  restorecon -RFi /{lib,etc}/systemd/system-preset/*springboot.preset
   restorecon -RFi %{_docdir}/%{name}/
 fi
+
+systemctl daemon-reload
   
 ###################################
 
@@ -66,6 +69,7 @@ fi
 /usr/lib/systemd/system/springboot@.service
 /usr/lib/systemd/system/springboot.target
 /usr/lib/systemd/system/springboot-shutdown.target
+/usr/lib/systemd/system-preset/90-springboot.preset
 /opt/springboot/bin/springboot-service.sh
   
 %dir		%{_docdir}/%{name}
