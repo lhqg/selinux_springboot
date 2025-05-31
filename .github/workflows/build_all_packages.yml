@@ -107,7 +107,7 @@ jobs:
       sftp_password: ${{ secrets.SSH_OVH_PASSWORD }}
     with:
       build_distro: almalinux
-      build_distro_versions: '[ "8", "9" ]'
+      build_distro_versions: '[ "8", "9", "10" ]'
       spec_file_location: rpm/
       release_upload_url: ${{ needs.get_release_info.outputs.upload_url }}
       provided_version: ${{ needs.get_release_info.outputs.version_number }}

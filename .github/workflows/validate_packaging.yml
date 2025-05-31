@@ -25,7 +25,7 @@ jobs:
       gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
     with:
       build_distro: almalinux
-      build_distro_versions: '[ "9" ]'
+      build_distro_versions: '[ "10" ]'
       spec_file_location: rpm/
       provided_version: '0.0.1'
       
