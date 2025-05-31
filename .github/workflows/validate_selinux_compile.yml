@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        el_vers: [ '8', '9' ]
+        el_vers: [ '8', '9', '10' ]
         
     steps:
       - name: Checkout SELinux code
