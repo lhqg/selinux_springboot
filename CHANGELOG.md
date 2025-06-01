@@ -1,3 +1,11 @@
+# Release v1.5.1
+
+
+#### Bug Fixes
+
+* [#105](https://github.com/lhqg/selinux_springboot/pull/105): Enclose the mongod_t:peer statement in an optional policy because of EL10
+
+
 # Changelog for selinux_springboot
 
 ## Release v1.5.0
