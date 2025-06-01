@@ -24,7 +24,7 @@
 #
 ############################################################################
 
-policy_module(springboot, 1.5.0)
+policy_module(springboot, 1.5.1)
 
 ########################################
 #
@@ -171,7 +171,6 @@ ifdef(`distro_redhat',`
 	type	postgresql_t;
 	type	redis_t;
 	type	couchdb_t;
-	type	mongod_t;
 	type	syslogd_t;
 
 	type	node_t;
@@ -362,8 +361,16 @@ ifdef(`distro_redhat',`
 
 	if (allow_springboot_connectto_mongodb) {
 		allow	springboot_t	mongod_port_t:tcp_socket	name_connect;
-		allow	springboot_t	mongod_t:peer				recv;
 	}
+
+	optional_policy(`
+		gen_require(`
+			type	mongod_t;
+		')
+		if (allow_springboot_connectto_mongodb) {
+			allow	springboot_t	mongod_t:peer				recv;
+		}
+	')
 ')
 
 if (allow_springboot_connectto_mysql) {
