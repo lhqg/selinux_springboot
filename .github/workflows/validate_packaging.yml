@@ -17,6 +17,18 @@ on:
 
 jobs:
 
+  package_fc:
+    name: Validate package build for Fedora family branch
+    uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_rpm.yml@main
+    secrets:
+      gpg_private_key: ${{ secrets.RPM_SIGNING_KEY }}
+      gpg_private_key_password: ${{ secrets.RPM_SIGNING_KEY_PASSWORD }}
+    with:
+      build_distro: fedora
+      build_distro_versions: '[ "41", "43" ]'
+      spec_file_location: rpm/
+      provided_version: '0.0.1'
+      
   package_el:
     name: Validate package build for Red Hat EL family branch
     uses: lhqg/build_selinux_packages/.github/workflows/build_semodule_rpm.yml@main
