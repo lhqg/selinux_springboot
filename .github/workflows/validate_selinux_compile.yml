@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        fedora_vers: [ '38', '39', '40', '41', '42', '43' ]
+        fedora_vers: [ '40', '41', '42', '43', '44' ]
     steps:
       - name: Checkout SELinux code
         uses: actions/checkout@master
@@ -160,11 +160,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Run Changelog CI
-        uses: saadmk11/changelog-ci@v1.2.0
-        with:
-          release_version: v${{ needs.semodule_info.outputs.semodule_vers }}
-          config_file: changelog-ci-config.yml
+#      - name: Run Changelog CI
+#        uses: saadmk11/changelog-ci@v1.2.0
+#        with:
+#          release_version: v${{ needs.semodule_info.outputs.semodule_vers }}
+#          config_file: changelog-ci-config.yml
 
       - name: Tag the branch with the SELinux module version and draft a pre-release
         id: create_release
