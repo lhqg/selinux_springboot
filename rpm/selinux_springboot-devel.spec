@@ -19,13 +19,20 @@ SELinux policy development interface for Springboot policy module.
 %clean
 %{__rm} -rf %{buildroot}
 
-#%prep
-#%setup -q
+###################################
+
+%prep
+
+if [ ! -d %{_builddir}/se_module -a -d %{_builddir}/../se_module ]
+then
+  ln -s %{_builddir}/../se_module %{_builddir}/
+fi
 
 ###################################
 
 %install
 
+ls -lR %{_builddir}/
 mkdir -p -m 0755 %{buildroot}/usr/share/selinux/devel/include/apps
 install -m 0444 %{_builddir}/se_module/springboot.if %{buildroot}/usr/share/selinux/devel/include/apps/
 

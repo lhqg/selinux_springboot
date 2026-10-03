@@ -29,8 +29,19 @@ exit 0
 
 ###################################
 
+%prep
+
+if [ ! -d %{_builddir}/se_module -a -d %{_builddir}/../se_module ]
+then
+  ln -s %{_builddir}/../systemd   %{_builddir}/
+  ln -s %{_builddir}/../manpages  %{_builddir}/
+fi
+
+###################################
+
 %install
 
+ls -lR %{_builddir}/
 mkdir -p -m 0755 %{buildroot}/%{_docdir}/%{name}/examples
 mkdir -p -m 0755 %{buildroot}/usr/lib/systemd/system
 mkdir -p -m 0755 %{buildroot}/usr/lib/systemd/system-preset
